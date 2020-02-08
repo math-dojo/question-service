@@ -13,7 +13,7 @@ import io.mathdojo.model.Question;
 @RestController
 public class QuestionController {
 	
-@Autowired	
+
 QuestionRepostiory qRepo;
 	
 	@GetMapping("/question")
