@@ -29,4 +29,4 @@ steps:
         $xmlcontent
         New-Item -Path '.\.mvn\settings.xml' -ItemType "file" -Value "$xmlcontent"
         cat .\.mvn\settings.xml
-        .\mvnw --settings .\.mvn\settings.xml -DfunctionAppName=question-service-$(Build.SourceBranchName) azure-functions:deploy
+        .\mvnw --settings .\.mvn\settings.xml -DfunctionAppName=question-service-$(Build.SourceBranchName) azure-functions:deploy -X
