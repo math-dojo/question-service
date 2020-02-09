@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+        "proxy1": {
+            "matchCondition": {
+                "methods": [ "GET" ],
+                "route": "/api/question"
+            },
+            "backendUri": "https://localhost/api/getQuestion"
+        },
+        "proxy2": {
+            "matchCondition": {
+                "methods": [ "POST" ],
+                "route": "/api/question"
+            },
+            "backendUri": "https://localhost/api/createQuestion"
+        }
+    }
+}
