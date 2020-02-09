@@ -42,3 +42,9 @@ And you can test it using a cURL command:
 Deploying the application on Azure Function with the Azure Function Maven plug-in:
 
 `./mvnw azure-functions:deploy`
+
+## Question Bank
+https://bmos.ukmt.org.uk/home/bmo.shtml
+
+## Notes
+Using the word "title" or "body" as Java attributes lead to errors in JSON parsing
