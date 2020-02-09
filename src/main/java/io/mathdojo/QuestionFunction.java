@@ -19,17 +19,14 @@ public class QuestionFunction {
     
    
     @Bean
-    public Function<GetObject, Question> question() {
-        return get -> new Question((get.get()+"deolu"), new String[]{"I am some stuff!", "Other Stuff"});
+    public Function<GetObject, Question> getQuestion() {
+        return get -> new Question("Our first question", "Is it really happenning?", "It may be happening", new String[]{"Does it snow in canada", "Does it rain in london", "Yes!"});
     }
-//	@PostMapping("/postQuestion")
-//	public Question greeting(@RequestBody Map<String, String> question ) {
-//	    String title = question.get("title");
-//	    String body = question.get("title");
-//	    String sampleAnswer = question.get("sampleAnswer");
-//	    String[] hints = question.get("hints").split(",") ;
-//	    
-//		return qRepo.save(new Question(title,body,sampleAnswer,hints));
-//	}
+	@Bean
+    public Function<Question, String> createQuestion() { 
+		 //save question to database here
+        new Question("Our first question", "Is it really happenning?", "It may be happening", new String[]{"Does it snow in canada", "Does it rain in london", "Yes!"});
+        return question -> question.getQuestionTitle();
+    }
 
 }

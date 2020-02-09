@@ -16,12 +16,14 @@ import java.util.Optional;
 @RestController
 public class QuestionHandler extends AzureSpringBootRequestHandler<GetObject,Question> {
 
-    @FunctionName("question")
+    @FunctionName("getQuestion")
     public Question execute(
-            @HttpTrigger(name = "request", methods = {HttpMethod.GET, HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Question>> request,
+            @HttpTrigger(name = "request", methods = {HttpMethod.GET}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Question>> request,
             ExecutionContext context) {
 
         //context.getLogger().info("Greeting user name: " + request.getBody().get().getName());
         return handleRequest(new GetObject(), context);
     }
+    
+ 
 }
