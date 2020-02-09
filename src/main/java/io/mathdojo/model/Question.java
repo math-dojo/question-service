@@ -1,32 +1,32 @@
 package io.mathdojo.model;
 
 public class Question {
-	private  String title;
-//	private  String body;
-//	private  String sampleAnswer;
-	//private final String[] hints;
-	
-	public Question () {
-		
-	}
-	public Question(String title) {
-//		this.title = title;
-//		this.body = body;
-//		this.sampleAnswer = sampleAnswer;
-	//	this.hints = hints;
-	}
-	public String getTitle() {
-		return title;
-	}
-//	public String getBody() {
-//		return body;
-//	}
-//	public String getSampleAnswer() {
-//		return sampleAnswer;
-//	}
-//	public String[] getHints() {
-//		return hints;
-//	}
 
+    public Question() {
+    }
 
+    public Question(String message, String[] stuffs) {
+        this.message = message;
+        this.stuff = stuffs;
+    }
+
+    private String message;
+    private String[] stuff;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String[] getStuff() {
+        return stuff;
+    }
+
+    public void setStuff(String[] stuffToSet) {
+        this.stuff = stuffToSet;
+    }
 }
+

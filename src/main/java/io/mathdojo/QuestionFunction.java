@@ -20,7 +20,7 @@ public class QuestionFunction {
    
     @Bean
     public Function<GetObject, Question> question() {
-        return get -> new Question(get.get()+"deolu" );
+        return get -> new Question((get.get()+"deolu"), new String[]{"I am some stuff!", "Other Stuff"});
     }
 //	@PostMapping("/postQuestion")
 //	public Question greeting(@RequestBody Map<String, String> question ) {
