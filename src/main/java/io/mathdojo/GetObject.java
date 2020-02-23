@@ -1,4 +1,4 @@
-package io.mathdojo.model;
+package io.mathdojo;
 
 public class GetObject {
 	
