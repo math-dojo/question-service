@@ -32,8 +32,8 @@ Once the application is built, you can run it locally using the Azure Function M
 
 `./mvnw azure-functions:run`
 
-And you can test it by publishing a question object and retreiving it by with requests requests to:
- http://localhost:7071/api/question
+And you can test it by publishing a question object and retreiving it by with requests requests to:http://localhost:7071/api/question
+
  question objects have this JSON format:
  
  {
