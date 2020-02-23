@@ -18,7 +18,7 @@ Get and Post requests can be made to retreive or publish questions to a database
 
 ### Prerequisites
 
-This project uses the Maven Wrapper, so all you need is Java installed.
+This project uses the Maven Wrapper, so Java is necessary. If local testing is required you need to have MongoDB as well.
 
 ### Installation
 
