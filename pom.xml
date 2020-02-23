@@ -41,16 +41,6 @@
             <artifactId>spring-cloud-starter-function-web</artifactId>
             <scope>provided</scope>
         </dependency>
-         <dependency>
-         <version>2.2.0</version>
-		    <groupId>com.microsoft.azure</groupId>
-		    <artifactId>azure-cosmosdb-spring-boot-starter</artifactId>
-         </dependency>
-		<dependency>
-		    <groupId>com.microsoft.azure</groupId>
-		    <artifactId>spring-data-cosmosdb</artifactId>
-		    <version>2.2.0</version>
-		</dependency>
 
         <!-- Test -->
         <dependency>
@@ -58,7 +48,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-      
     </dependencies>
 
     <dependencyManagement>

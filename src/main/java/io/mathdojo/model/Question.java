@@ -1,13 +1,8 @@
 package io.mathdojo.model;
 
-import org.springframework.data.annotation.Id;
-
-import com.microsoft.azure.spring.data.cosmosdb.core.mapping.Document;
-
-@Document(collection = "questions")
 public class Question {
 	
-	@Id
+
     private String questionTitle;
     private String questionBody;
     private String sampleAnswer;
@@ -61,8 +56,6 @@ public class Question {
 	public void setHints(String[] hints) {
 		this.hints = hints;
 	}
-
-
 
 
 
