@@ -27,7 +27,7 @@ This project uses the Maven Wrapper, so Java is necessary. If local testing is r
 -Download MongoDB for local testing: https://www.mongodb.com/download-center/community (preferably install as network service user and with Compass) check that properties file matches config.
 
 ### Quickstart
-
+set environment variable SPRING_PROFILES_ACTIVE = local
 Once the application is built, you can run it locally using the Azure Function Maven plug-in:
 
 `./mvnw azure-functions:run`
