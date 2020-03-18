@@ -26,4 +26,54 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotFoundErrorModel'
+                $ref: '#/components/schemas/ResourceNotFoundError'
+    parameters:
+      - name: "questionId"
+        in: "path"
+        description: "id of question to be found. This will be a kebab-case humar readable string"
+        required: true
+        schema:
+          type: string
+        example: 'a-hard-question'
+components:
+  schemas:
+    ResourceNotFoundError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        sampleAnswer:
+          type: string
+        successRate:
+          type: number
+          format: float
+        difficulty:
+          type: string
+          enum:
+            - easy
+            - medium
+            - hard
+        solved:
+          type: boolean
+        hints:
+          type: array
+          items:
+            type: string
+        parentTopicTitle:
+          type: string
+        questionAnswerOptions:
+          type: array
+          items:
+            type: string
