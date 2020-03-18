@@ -22,11 +22,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Question'
         '404':
-          description: A simple string response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceNotFoundError'
+          description: A question with the specified ID was not found
     parameters:
       - name: "questionId"
         in: "path"
@@ -37,14 +33,6 @@ paths:
         example: 'a-hard-question'
 components:
   schemas:
-    ResourceNotFoundError:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
     Question:
       type: object
       properties:
