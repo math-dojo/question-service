@@ -204,6 +204,28 @@ paths:
                   value: "Bad request: Bad parameters in request body"
         '403':
           description: Forbidden
+  /topics/{topicId}/questions:
+    parameters:
+      - name: "topicId"
+        in: "path"
+        description: "id of topic to be found. This will be a kebab-case human readable string"
+        required: true
+        schema:
+          type: string
+        example: 'a-hard-topic'
+    get:
+      summary: "returns full details for all questions contained in a topic"
+      responses: 
+        '200':
+          description: the returned questions
+          content: 
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Question'
+        '404':
+          description: A topic with the specified ID was not found
 components:
   schemas:
     Question:
