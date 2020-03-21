@@ -32,6 +32,7 @@ paths:
         '404':
           description: A question with the specified ID was not found
     patch:
+      summary: "updates the question with the specific id"
       description: Updates the properties of an existing question
       requestBody:
         required: true
@@ -68,6 +69,21 @@ paths:
       responses:
         '204':
           description: OK
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                bad-request-body:
+                  summary: Error response if one or more properties are illegal
+                  value: "Bad request: One or more parameters and their types are not present in a question"
+                update-error:
+                  summary: Error response if one or more properties cannot be updated
+                  value: "Bad request: One or more parameters could not be updated"
+        '403':
+          description: Forbidden
   /questions:
     post:
       summary: "creates a new question"
