@@ -54,8 +54,6 @@ paths:
                     - easy
                     - medium
                     - hard
-                solved:
-                  type: boolean
                 hints:
                   type: array
                   items:
@@ -248,8 +246,6 @@ components:
             - easy
             - medium
             - hard
-        solved:
-          type: boolean
         hints:
           type: array
           items:
@@ -275,4 +271,3 @@ components:
             type: string
             description: questionId
             example: "a-kebab-case-question-id"
- 
