@@ -31,6 +31,38 @@ paths:
         schema:
           type: string
         example: 'a-hard-question'
+  /questions:
+    post:
+      summary: "creates a new question"
+      requestBody:
+        description: parameters of the question to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses: 
+        '201':
+          description: the created question
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                duplicate-question-creation-attempt:
+                  summary: Error response for attempting to duplicate a question 
+                  value: "Bad request: Question with id and title already exists"
+                bad-request-body:
+                  summary: Error response for incorrectly specifying the question to create 
+                  value: "Bad request: Bad parameters in request body"
+        '403':
+          description: Forbidden
 components:
   schemas:
     Question:
