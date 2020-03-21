@@ -82,6 +82,15 @@ paths:
                   value: "Bad request: One or more parameters could not be updated"
         '403':
           description: Forbidden
+    delete:
+      summary: "deletes a question with the matching id"
+      responses: 
+        '204':
+          description: the question was successfully deleted
+        '403':
+          description: Forbidden
+        '404':
+          description: A question with the specified ID was not found  
   /questions:
     post:
       summary: "creates a new question"
@@ -170,6 +179,35 @@ paths:
                   value: "Bad request: One or more parameters could not be updated"
         '403':
           description: Forbidden
+    delete:
+      summary: "deletes a topic with the matching id"
+      requestBody:
+        required: false
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                delete_children:
+                  type: boolean
+                  default: false
+      responses: 
+        '204':
+          description: the topic was successfully deleted
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                parent-topic-deletion-attempt:
+                  summary: Error response for attempting to delete a topic that still has child questions 
+                  value: "Bad request: Attempted to delete a topic that still has child questions. Use the delete_children: true flag to remove these as well."
+        '403':
+          description: Forbidden
+        '404':
+          description: A topic with the specified ID was not found   
   /topics:
     post:
       summary: "creates a new topic"
