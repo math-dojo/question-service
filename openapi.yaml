@@ -15,7 +15,7 @@ paths:
     parameters:
       - name: "questionId"
         in: "path"
-        description: "id of question to be found. This will be a kebab-case humar readable string"
+        description: "id of question to be found. This will be a kebab-case human readable string"
         required: true
         schema:
           type: string
@@ -113,6 +113,94 @@ paths:
                   value: "Bad request: Question with id and title already exists"
                 bad-request-body:
                   summary: Error response for incorrectly specifying the question to create 
+                  value: "Bad request: Bad parameters in request body"
+        '403':
+          description: Forbidden
+  /topics/{topicId}:
+    parameters:
+      - name: "topicId"
+        in: "path"
+        description: "id of topic to be found. This will be a kebab-case human readable string"
+        required: true
+        schema:
+          type: string
+        example: 'a-hard-topic'
+    get:
+      summary: "returns a topic with the matching id"
+      responses: 
+        '200':
+          description: the returned topic
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Topic'
+        '404':
+          description: A topic with the specified ID was not found
+    patch:
+      summary: "updates the topic with the specific id"
+      description: Updates the properties of an existing topic
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                questions:
+                  type: array
+                  items:  
+                    type: string
+                    description: questionId
+                    example: "a-kebab-case-question-id"              
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                bad-request-body:
+                  summary: Error response if one or more properties are illegal
+                  value: "Bad request: One or more parameters and their types are not present in a questopiction"
+                update-error:
+                  summary: Error response if one or more properties cannot be updated
+                  value: "Bad request: One or more parameters could not be updated"
+        '403':
+          description: Forbidden
+  /topics:
+    post:
+      summary: "creates a new topic"
+      requestBody:
+        description: parameters of the question to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Topic'
+      responses: 
+        '201':
+          description: the created topic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Topic'
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                duplicate-topic-creation-attempt:
+                  summary: Error response for attempting to duplicate a topic 
+                  value: "Bad request: Topic with id and title already exists"
+                bad-request-body:
+                  summary: Error response for incorrectly specifying the topic to create 
                   value: "Bad request: Bad parameters in request body"
         '403':
           description: Forbidden
