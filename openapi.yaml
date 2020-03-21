@@ -12,6 +12,14 @@ servers:
   description: Production server
 paths:
   /questions/{questionId}:
+    parameters:
+      - name: "questionId"
+        in: "path"
+        description: "id of question to be found. This will be a kebab-case humar readable string"
+        required: true
+        schema:
+          type: string
+        example: 'a-hard-question'
     get:
       summary: "returns a question with the matching id"
       responses: 
@@ -23,14 +31,43 @@ paths:
                 $ref: '#/components/schemas/Question'
         '404':
           description: A question with the specified ID was not found
-    parameters:
-      - name: "questionId"
-        in: "path"
-        description: "id of question to be found. This will be a kebab-case humar readable string"
+    patch:
+      description: Updates the properties of an existing question
+      requestBody:
         required: true
+        content: 
+          application/json:
         schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                sampleAnswer:
+                  type: string
+                successRate:
+                  type: number
+                  format: float
+                difficulty:
+                  type: string
+                  enum:
+                    - easy
+                    - medium
+                    - hard
+                solved:
+                  type: boolean
+                hints:
+                  type: array
+                  items:
           type: string
-        example: 'a-hard-question'
+                parentTopicTitle:
+                  type: string
+                questionAnswerOptions:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '204':
+          description: OK
   /questions:
     post:
       summary: "creates a new question"
