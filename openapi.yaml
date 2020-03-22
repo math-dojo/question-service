@@ -198,7 +198,7 @@ paths:
               examples:
                 bad-request-body:
                   summary: Error response if one or more properties are illegal
-                  value: "Bad request: One or more parameters and their types are not present in a questopiction"
+                  value: "Bad request: One or more parameters and their types are not present in a topic"
                 update-error:
                   summary: Error response if one or more properties cannot be updated
                   value: "Bad request: One or more parameters could not be updated"
@@ -233,7 +233,7 @@ paths:
     post:
       summary: "creates a new topic"
       requestBody:
-        description: parameters of the question to be created
+        description: parameters of the topic to be created
         required: true
         content:
           application/json:
