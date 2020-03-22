@@ -276,6 +276,20 @@ paths:
         example: 'a-hard-topic'
     get:
       summary: "returns full details for all questions contained in a topic"
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+            default: ""
+          required: false
+        - in: query
+          name: difficulty
+          schema:
+            type: array
+            items: 
+              type: string
+              enum: [easy, medium, hard]
       responses: 
         '200':
           description: the returned questions
