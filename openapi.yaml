@@ -206,16 +206,12 @@ paths:
           description: Forbidden
     delete:
       summary: "deletes a topic with the matching id"
-      requestBody:
-        required: false
-        content: 
-          application/json:
-            schema:
-              type: object
-              properties:
-                delete_children:
-                  type: boolean
-                  default: false
+      parameters:
+        - in: query
+          required: false
+          name: delete_children
+          schema:
+            type: boolean
       responses: 
         '204':
           description: the topic was successfully deleted
