@@ -123,6 +123,29 @@ paths:
                   value: "Bad request: Bad parameters in request body"
         '403':
           description: Forbidden
+    get:
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: difficulty
+          schema:
+            type: string
+            enum: [easy, medium, hard]
+          required: true
+      summary: "search for a question by string and difficulty level"
+      responses: 
+        '200':
+          description: an array of the returned questions (or empty if none found)
+          content: 
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Question'         
   /topics/{topicId}:
     parameters:
       - name: "topicId"
