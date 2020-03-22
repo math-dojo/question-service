@@ -265,6 +265,24 @@ paths:
                   value: "Bad request: Bad parameters in request body"
         '403':
           description: Forbidden
+    get:
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+            default: ""
+          required: false
+      summary: "search for a topic by title"
+      responses: 
+        '200':
+          description: an array of the returned topics (or empty if none found)
+          content: 
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Topic' 
   /topics/{topicId}/questions:
     parameters:
       - name: "topicId"
