@@ -14,6 +14,20 @@
                 "route": "/api/question"
             },
             "backendUri": "https://localhost/api/createQuestion"
+        },
+        "proxy3": {
+            "matchCondition": {
+                "methods": [ "GET" ],
+                "route": "/api/topics"
+            },
+            "backendUri": "https://localhost/api/getTopic"
+        },
+        "proxy4": {
+            "matchCondition": {
+                "methods": [ "POST" ],
+                "route": "/api/topics"
+            },
+            "backendUri": "https://localhost/api/createTopic"
         }
     }
 }

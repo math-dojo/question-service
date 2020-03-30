@@ -1,34 +1,55 @@
 package io.mathdojo;
 
+import java.util.Map;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Document(collection = "questions")
-public class Question {
-	
+public class Question {	
+	public static Question EMPTY_DATABASE =  new Question("the database is empty", null, null, null, Integer.BYTES, null, null, null, null, null);
+	//id must be kebab-case
 	@Id
+	private String id;
     private String questionTitle;
     private String questionBody;
     private String sampleAnswer;
-    private String[] hints;
     private int successRate;
     private String difficulty;
-    private boolean solved;
+    private String[] hints;
+    private String parentTopicTitle;
+    private String[] questionAnswerOptions;
+    private String answer;
 
     public Question() {
     }
 
-	public Question(String questionTitle, String questionBody, String sampleAnswer, String[] hints, int successRate,
-			String difficulty, boolean solved) {
+	public Question(String id, String questionTitle, String questionBody, String sampleAnswer, int successRate,
+			String difficulty, String[] hints, String parentTopicTitle, String[] questionAnswerOptions, String answer) {
 		super();
+		this.id = id;
 		this.questionTitle = questionTitle;
 		this.questionBody = questionBody;
 		this.sampleAnswer = sampleAnswer;
-		this.hints = hints;
 		this.successRate = successRate;
 		this.difficulty = difficulty;
-		this.solved = solved;
+		this.hints = hints;
+		this.parentTopicTitle = parentTopicTitle;
+		this.questionAnswerOptions = questionAnswerOptions;
+		this.answer = answer;
+	}
+
+	public Question(Map<String, String> queryParameters) {
+		this("the database is empty", queryParameters.get("title"), null, null, Integer.BYTES, queryParameters.get("difficulty"), null, null, null, null);
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getQuestionTitle() {
@@ -55,14 +76,6 @@ public class Question {
 		this.sampleAnswer = sampleAnswer;
 	}
 
-	public String[] getHints() {
-		return hints;
-	}
-
-	public void setHints(String[] hints) {
-		this.hints = hints;
-	}
-
 	public int getSuccessRate() {
 		return successRate;
 	}
@@ -79,13 +92,39 @@ public class Question {
 		this.difficulty = difficulty;
 	}
 
-	public boolean isSolved() {
-		return solved;
+	public String[] getHints() {
+		return hints;
 	}
 
-	public void setSolved(boolean solved) {
-		this.solved = solved;
+	public void setHints(String[] hints) {
+		this.hints = hints;
 	}
+
+	public String getParentTopicTitle() {
+		return parentTopicTitle;
+	}
+
+	public void setParentTopicTitle(String parentTopicTitle) {
+		this.parentTopicTitle = parentTopicTitle;
+	}
+
+	public String[] getQuestionAnswerOptions() {
+		return questionAnswerOptions;
+	}
+
+	public void setQuestionAnswerOptions(String[] questionAnswerOptions) {
+		this.questionAnswerOptions = questionAnswerOptions;
+	}
+
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
+
+
 
     
 }
