@@ -1,6 +1,5 @@
 package io.mathdojo;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.cloud.function.adapter.azure.AzureSpringBootRequestHandler;
@@ -13,6 +12,11 @@ import com.microsoft.azure.functions.annotation.BindingName;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
+/**
+ * 
+ * This class handles http requests specific to topics
+ *
+ */
 public class TopicHandler extends AzureSpringBootRequestHandler<Topic,Topic> {
 
     @FunctionName("getTopic")

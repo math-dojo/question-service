@@ -1,5 +1,6 @@
 package io.mathdojo;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -8,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "questions")
 public class Question {	
-	public static Question EMPTY_DATABASE =  new Question("the database is empty", null, null, null, Integer.BYTES, null, null, null, null, null);
+	public static Question EMPTY_DATABASE =  new Question("the-database-is-empty", null, null, null, Integer.MIN_VALUE, null, null, null, null, null);
 	//id must be kebab-case
 	@Id
 	private String id;
@@ -41,7 +42,7 @@ public class Question {
 	}
 
 	public Question(Map<String, String> queryParameters) {
-		this("the database is empty", queryParameters.get("title"), null, null, Integer.BYTES, queryParameters.get("difficulty"), null, null, null, null);
+		this("the database is empty", queryParameters.get("title"), null, null, Integer.MIN_VALUE, queryParameters.get("difficulty"), null, null, null, null);
 	}
 
 	public String getId() {
@@ -122,6 +123,67 @@ public class Question {
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());	
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Question other = (Question) obj;
+		if (answer == null) {
+			if (other.answer != null)
+				return false;
+		} else if (!answer.equals(other.answer))
+			return false;
+		if (difficulty == null) {
+			if (other.difficulty != null)
+				return false;
+		} else if (!difficulty.equals(other.difficulty))
+			return false;
+		if (!Arrays.equals(hints, other.hints))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (parentTopicTitle == null) {
+			if (other.parentTopicTitle != null)
+				return false;
+		} else if (!parentTopicTitle.equals(other.parentTopicTitle))
+			return false;
+		if (!Arrays.equals(questionAnswerOptions, other.questionAnswerOptions))
+			return false;
+		if (questionBody == null) {
+			if (other.questionBody != null)
+				return false;
+		} else if (!questionBody.equals(other.questionBody))
+			return false;
+		if (questionTitle == null) {
+			if (other.questionTitle != null)
+				return false;
+		} else if (!questionTitle.equals(other.questionTitle))
+			return false;
+		if (sampleAnswer == null) {
+			if (other.sampleAnswer != null)
+				return false;
+		} else if (!sampleAnswer.equals(other.sampleAnswer))
+			return false;
+		if (successRate != other.successRate)
+			return false;
+		return true;
 	}
 
 

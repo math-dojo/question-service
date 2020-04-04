@@ -15,6 +15,9 @@ import com.google.common.collect.Iterables;
 
 @SpringBootApplication
 public class QuestionFunction {
+	/**
+	 * This class contains all the functions that can be called in this service. Functions are called through RequestHandler classes
+	 */
 
 	@Autowired
 	public MathDojoQuestionRepository repository;
@@ -75,7 +78,7 @@ public class QuestionFunction {
 	}
 	@Bean
 	public Consumer<Topic> deleteTopic() {
-		return topic -> repository.deleteById(topic.getId());
+		return topic -> tRepository.deleteById(topic.getId());
 	}
 	@Bean
 	public Function<Topic, List<Question>> getQuestions() {

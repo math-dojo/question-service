@@ -12,6 +12,12 @@ import com.microsoft.azure.functions.annotation.BindingName;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
+/**
+ * 
+ * This class handles http requests specific to questions
+ *
+ */
+
 public class QuestionHandler extends AzureSpringBootRequestHandler<Question, Question> {
 
 	@FunctionName("getQuestion")
