@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 @Document(collection = "topics")
 public class Topic {
 	public static Topic EMPTY_DATABASE = new Topic("The-database-is-empty", null, null, null);

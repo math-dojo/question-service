@@ -16,7 +16,8 @@ import com.google.common.collect.Iterables;
 @SpringBootApplication
 public class QuestionFunction {
 	/**
-	 * This class contains all the functions that can be called in this service. Functions are called through RequestHandler classes
+	 * This class contains all the functions that can be called in this service.
+	 * Functions are called through RequestHandler classes
 	 */
 
 	@Autowired
@@ -43,18 +44,21 @@ public class QuestionFunction {
 
 	@Bean
 	public Function<Question, Question> getQuestionById() {
-		return question -> repository.findById(question.getId()).isPresent() ? repository.findById(question.getId()).get() : Question.EMPTY_DATABASE;
+		return question -> repository.findById(question.getId()).isPresent()
+				? repository.findById(question.getId()).get()
+				: Question.EMPTY_DATABASE;
 	}
-	
+
 	@Bean
 	public Consumer<Question> updateQuestion() {
 		return createQuestion();
 	}
+
 	@Bean
 	public Consumer<Question> deleteQuestion() {
 		return question -> repository.deleteById(question.getId());
 	}
-	
+
 	@Bean
 	public Function<Topic, Topic> getTopic() {
 		return input -> Iterables.getFirst(
@@ -69,17 +73,20 @@ public class QuestionFunction {
 
 	@Bean
 	public Function<Topic, Topic> getTopicById() {
-		return topic -> tRepository.findById(topic.getId()).isPresent() ? tRepository.findById(topic.getId()).get() : Topic.EMPTY_DATABASE;
+		return topic -> tRepository.findById(topic.getId()).isPresent() ? tRepository.findById(topic.getId()).get()
+				: Topic.EMPTY_DATABASE;
 	}
-	
+
 	@Bean
 	public Consumer<Topic> updateTopic() {
 		return createTopic();
 	}
+
 	@Bean
 	public Consumer<Topic> deleteTopic() {
 		return topic -> tRepository.deleteById(topic.getId());
 	}
+
 	@Bean
 	public Function<Topic, List<Question>> getQuestions() {
 

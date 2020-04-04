@@ -28,7 +28,7 @@ public class QuestionHandler extends AzureSpringBootRequestHandler<Question, Que
 
 		return handleRequest(new Question(request.getQueryParameters()), context);
 	}
-	
+
 	@FunctionName("createQuestion")
 	public Question execute(@HttpTrigger(name = "request", methods = {
 			HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Question>> request,

@@ -17,16 +17,17 @@ import com.microsoft.azure.functions.annotation.HttpTrigger;
  * This class handles http requests specific to topics
  *
  */
-public class TopicHandler extends AzureSpringBootRequestHandler<Topic,Topic> {
+public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 
-    @FunctionName("getTopic")
-    public Topic executeGet(
-            @HttpTrigger(name = "request", methods = {HttpMethod.GET}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Topic>> request,
-            ExecutionContext context) {
-    	context.getLogger().info("Retrieving topic" );
-        return handleRequest(new Topic(request.getQueryParameters()), context);
-    }
-    @FunctionName("createTopic")
+	@FunctionName("getTopic")
+	public Topic executeGet(@HttpTrigger(name = "request", methods = {
+			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Topic>> request,
+			ExecutionContext context) {
+		context.getLogger().info("Retrieving topic");
+		return handleRequest(new Topic(request.getQueryParameters()), context);
+	}
+
+	@FunctionName("createTopic")
 	public Topic executePost(@HttpTrigger(name = "request", methods = {
 			HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Topic>> request,
 			ExecutionContext context) {
@@ -64,6 +65,7 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic,Topic> {
 		topic.setId(topicId);
 		return handleRequest(topic, context);
 	}
+
 	@FunctionName("getQuestions")
 	public Topic executeGetQuestions(@HttpTrigger(name = "request", methods = {
 			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics/{topicId}/topics") HttpRequestMessage<Optional<Topic>> request,
@@ -74,5 +76,5 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic,Topic> {
 
 		return handleRequest(topic, context);
 	}
- 
+
 }
