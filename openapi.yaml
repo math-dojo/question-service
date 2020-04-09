@@ -1,0 +1,364 @@
+openapi: "3.0.0"
+info: 
+  title: "Question Service API"
+  description: "This is the API for the Question Service. It describes the models it employs and data it returns"
+  version: "1.0.0"
+servers:
+- url: https://question-service-develop.azurewebsites.net
+  description: Development server
+- url: https://question-service-master.azurewebsites.net
+  description: Staging server
+- url: https://question-service.azurewebsites.net
+  description: Production server
+paths:
+  /questions/{questionId}:
+    parameters:
+      - name: "questionId"
+        in: "path"
+        description: "id of question to be found. This will be a kebab-case human readable string"
+        required: true
+        schema:
+          type: string
+        example: 'a-hard-question'
+    get:
+      summary: "returns a question with the matching id"
+      responses: 
+        '200':
+          description: the returned question
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '404':
+          description: A question with the specified ID was not found
+    patch:
+      summary: "updates the question with the specific id"
+      description: Updates the properties of an existing question
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                sampleAnswer:
+                  type: string
+                successRate:
+                  type: number
+                  format: float
+                difficulty:
+                  type: string
+                  enum:
+                    - easy
+                    - medium
+                    - hard
+                hints:
+                  type: array
+                  items:
+                    type: string
+                parentTopicTitle:
+                  type: string
+                questionAnswerOptions:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                bad-request-body:
+                  summary: Error response if one or more properties are illegal
+                  value: "Bad request: One or more parameters and their types are not present in a question"
+                update-error:
+                  summary: Error response if one or more properties cannot be updated
+                  value: "Bad request: One or more parameters could not be updated"
+        '403':
+          description: Forbidden
+    delete:
+      summary: "deletes a question with the matching id"
+      responses: 
+        '204':
+          description: the question was successfully deleted
+        '403':
+          description: Forbidden
+        '404':
+          description: A question with the specified ID was not found  
+  /questions:
+    post:
+      summary: "creates a new question"
+      requestBody:
+        description: parameters of the question to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+      responses: 
+        '201':
+          description: the created question
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                duplicate-question-creation-attempt:
+                  summary: Error response for attempting to duplicate a question 
+                  value: "Bad request: Question with id and title already exists"
+                bad-request-body:
+                  summary: Error response for incorrectly specifying the question to create 
+                  value: "Bad request: Bad parameters in request body"
+        '403':
+          description: Forbidden
+    get:
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: difficulty
+          schema:
+            type: array
+            items: 
+              type: string
+              enum: [easy, medium, hard]
+          required: false
+      summary: "search for a question by string and difficulty level"
+      responses: 
+        '200':
+          description: an array of the returned questions (or empty if none found)
+          content: 
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Question'         
+  /topics/{topicId}:
+    parameters:
+      - name: "topicId"
+        in: "path"
+        description: "id of topic to be found. This will be a kebab-case human readable string"
+        required: true
+        schema:
+          type: string
+        example: 'a-hard-topic'
+    get:
+      summary: "returns a topic with the matching id"
+      responses: 
+        '200':
+          description: the returned topic
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Topic'
+        '404':
+          description: A topic with the specified ID was not found
+    patch:
+      summary: "updates the topic with the specific id"
+      description: Updates the properties of an existing topic
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                questions:
+                  type: array
+                  items:  
+                    type: string
+                    description: questionId
+                    example: "a-kebab-case-question-id"              
+      responses:
+        '204':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                bad-request-body:
+                  summary: Error response if one or more properties are illegal
+                  value: "Bad request: One or more parameters and their types are not present in a topic"
+                update-error:
+                  summary: Error response if one or more properties cannot be updated
+                  value: "Bad request: One or more parameters could not be updated"
+        '403':
+          description: Forbidden
+    delete:
+      summary: "deletes a topic with the matching id"
+      parameters:
+        - in: query
+          required: false
+          name: delete_children
+          schema:
+            type: boolean
+      responses: 
+        '204':
+          description: the topic was successfully deleted
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                parent-topic-deletion-attempt:
+                  summary: Error response for attempting to delete a topic that still has child questions 
+                  value: "Bad request: Attempted to delete a topic that still has child questions. Use the delete_children: true flag to remove these as well."
+        '403':
+          description: Forbidden
+        '404':
+          description: A topic with the specified ID was not found   
+  /topics:
+    post:
+      summary: "creates a new topic"
+      requestBody:
+        description: parameters of the topic to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Topic'
+      responses: 
+        '201':
+          description: the created topic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Topic'
+        '400':
+          description: Bad request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                duplicate-topic-creation-attempt:
+                  summary: Error response for attempting to duplicate a topic 
+                  value: "Bad request: Topic with id and title already exists"
+                bad-request-body:
+                  summary: Error response for incorrectly specifying the topic to create 
+                  value: "Bad request: Bad parameters in request body"
+        '403':
+          description: Forbidden
+    get:
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+            default: ""
+          required: false
+      summary: "search for a topic by title"
+      responses: 
+        '200':
+          description: an array of the returned topics (or empty if none found)
+          content: 
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Topic' 
+  /topics/{topicId}/questions:
+    parameters:
+      - name: "topicId"
+        in: "path"
+        description: "id of topic to be found. This will be a kebab-case human readable string"
+        required: true
+        schema:
+          type: string
+        example: 'a-hard-topic'
+    get:
+      summary: "returns full details for all questions contained in a topic"
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+            default: ""
+          required: false
+        - in: query
+          name: difficulty
+          schema:
+            type: array
+            items: 
+              type: string
+              enum: [easy, medium, hard]
+      responses: 
+        '200':
+          description: the returned questions
+          content: 
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Question'
+        '404':
+          description: A topic with the specified ID was not found
+components:
+  schemas:
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        sampleAnswer:
+          type: string
+        successRate:
+          type: number
+          format: float
+        difficulty:
+          type: string
+          enum:
+            - easy
+            - medium
+            - hard
+        hints:
+          type: array
+          items:
+            type: string
+        parentTopicTitle:
+          type: string
+        questionAnswerOptions:
+          type: array
+          items:
+            type: string
+    Topic:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        questions:
+          type: array
+          items:  
+            type: string
+            description: questionId
+            example: "a-kebab-case-question-id"
