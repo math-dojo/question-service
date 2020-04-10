@@ -21,7 +21,7 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 
 	@FunctionName("getTopic")
 	public Topic executeGet(@HttpTrigger(name = "request", methods = {
-			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Topic>> request,
+			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics") HttpRequestMessage<Optional<Topic>> request,
 			ExecutionContext context) {
 		context.getLogger().info("Retrieving topic");
 		return handleRequest(new Topic(request.getQueryParameters()), context);
@@ -29,7 +29,7 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 
 	@FunctionName("createTopic")
 	public Topic executePost(@HttpTrigger(name = "request", methods = {
-			HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Topic>> request,
+			HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics") HttpRequestMessage<Optional<Topic>> request,
 			ExecutionContext context) {
 		context.getLogger().info("Posting topic with title: " + request.getBody().get().getTopicTitle());
 		return handleRequest(request.getBody().get(), context);
@@ -47,8 +47,9 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 	}
 
 	@FunctionName("updateTopic")
-	public Topic executeUpdate(@HttpTrigger(name = "request", methods = {
-			HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics/{topicId}") HttpRequestMessage<Optional<Topic>> request,
+	public Topic executeUpdate(
+			@HttpTrigger(name = "request", methods = {
+					HttpMethod.PUT }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics/{topicId}") HttpRequestMessage<Optional<Topic>> request,
 			ExecutionContext context, @BindingName("topicId") String topicId) {
 
 		context.getLogger().info("Updating topic with title: " + request.getBody().get().getTopicTitle());
@@ -68,7 +69,7 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 
 	@FunctionName("getQuestions")
 	public Topic executeGetQuestions(@HttpTrigger(name = "request", methods = {
-			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics/{topicId}/topics") HttpRequestMessage<Optional<Topic>> request,
+			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics/{topicId}/questions") HttpRequestMessage<Optional<Topic>> request,
 			ExecutionContext context, @BindingName("topicId") String topicId) {
 		context.getLogger().info("Retrieving Topic Questions");
 		Topic topic = new Topic();

@@ -9,14 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "questions")
 public class Question {	
-	public static Question EMPTY_DATABASE =  new Question("the-database-is-empty", null, null, null, Integer.MIN_VALUE, null, null, null, null, null);
+	public static Question EMPTY_DATABASE =  new Question("the-database-is-empty", null, null, null, 0, null, null, null, null, null);
 	//id must be kebab-case
 	@Id
 	private String id;
     private String questionTitle;
     private String questionBody;
     private String sampleAnswer;
-    private int successRate;
+    private Integer successRate;
     private String difficulty;
     private String[] hints;
     private String parentTopicTitle;
@@ -26,7 +26,7 @@ public class Question {
     public Question() {
     }
 
-	public Question(String id, String questionTitle, String questionBody, String sampleAnswer, int successRate,
+	public Question(String id, String questionTitle, String questionBody, String sampleAnswer, Integer successRate,
 			String difficulty, String[] hints, String parentTopicTitle, String[] questionAnswerOptions, String answer) {
 		super();
 		this.id = id;
@@ -42,7 +42,7 @@ public class Question {
 	}
 
 	public Question(Map<String, String> queryParameters) {
-		this("the database is empty", queryParameters.get("title"), null, null, Integer.MIN_VALUE, queryParameters.get("difficulty"), null, null, null, null);
+		this("the database is empty", queryParameters.get("title"), null, null, null, queryParameters.get("difficulty"), null, null, null, null);
 	}
 
 	public String getId() {
@@ -77,7 +77,7 @@ public class Question {
 		this.sampleAnswer = sampleAnswer;
 	}
 
-	public int getSuccessRate() {
+	public Integer getSuccessRate() {
 		return successRate;
 	}
 

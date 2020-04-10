@@ -51,7 +51,31 @@ public class QuestionFunction {
 
 	@Bean
 	public Consumer<Question> updateQuestion() {
-		return createQuestion();
+		return new Consumer<Question>() {
+
+			@Override
+			public void accept(Question question) {
+				Question oldQuestion = repository.findById(question.getId()).isPresent()
+						? repository.findById(question.getId()).get()
+						: null;
+				Question newQuestion = new Question(question.getId(),
+						question.getQuestionTitle() != null ? question.getQuestionTitle()
+								: oldQuestion.getQuestionTitle(),
+						question.getQuestionBody() != null ? question.getQuestionBody() : oldQuestion.getQuestionBody(),
+						question.getSampleAnswer() != null ? question.getSampleAnswer() : oldQuestion.getSampleAnswer(),
+						question.getSuccessRate() != null ? question.getSuccessRate() : oldQuestion.getSuccessRate(),
+						question.getDifficulty() != null ? question.getDifficulty() : oldQuestion.getDifficulty(),
+						question.getHints() != null ? question.getHints() : oldQuestion.getHints(),
+						question.getParentTopicTitle() != null ? question.getParentTopicTitle()
+								: oldQuestion.getParentTopicTitle(),
+						question.getQuestionAnswerOptions() != null ? question.getQuestionAnswerOptions()
+								: oldQuestion.getQuestionAnswerOptions(),
+						question.getAnswer() != null ? question.getAnswer() : oldQuestion.getAnswer());
+				;
+				repository.save(newQuestion);
+			}
+
+		};
 	}
 
 	@Bean
@@ -79,7 +103,22 @@ public class QuestionFunction {
 
 	@Bean
 	public Consumer<Topic> updateTopic() {
-		return createTopic();
+
+		return new Consumer<Topic>() {
+
+			@Override
+			public void accept(Topic topic) {
+				Topic oldTopic = tRepository.findById(topic.getId()).isPresent()
+						? tRepository.findById(topic.getId()).get()
+						: null;
+				Topic newTopic = new Topic(topic.getId(),
+						topic.getTopicTitle() != null ? topic.getTopicTitle() : oldTopic.getTopicTitle(),
+						topic.getName() != null ? topic.getName() : oldTopic.getName(),
+						topic.getQuestions() != null ? topic.getQuestions() : oldTopic.getQuestions());
+				tRepository.save(newTopic);
+			}
+
+		};
 	}
 
 	@Bean
