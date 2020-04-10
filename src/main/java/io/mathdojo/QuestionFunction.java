@@ -33,7 +33,7 @@ public class QuestionFunction {
 	public Function<Question, Question> getQuestion() {
 		return input -> Iterables.getFirst(
 				repository.findByQuestionTitle(input.getQuestionTitle()).stream()
-						.filter(i -> "easy".equals(i.getDifficulty())).collect(Collectors.toList()),
+						.filter(i -> i.getDifficulty().equals(input.getDifficulty())).collect(Collectors.toList()),
 				Question.EMPTY_DATABASE);
 	}
 
