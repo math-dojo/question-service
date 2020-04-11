@@ -31,7 +31,7 @@ paths:
                 $ref: '#/components/schemas/Question'
         '404':
           description: A question with the specified ID was not found
-    patch:
+    put:
       summary: "updates the question with the specific id"
       description: Updates the properties of an existing question
       requestBody:
@@ -168,7 +168,7 @@ paths:
                 $ref: '#/components/schemas/Topic'
         '404':
           description: A topic with the specified ID was not found
-    patch:
+    post:
       summary: "updates the topic with the specific id"
       description: Updates the properties of an existing topic
       requestBody:
