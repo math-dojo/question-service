@@ -359,6 +359,4 @@ components:
         questions:
           type: array
           items:  
-            type: string
-            description: questionId
-            example: "a-kebab-case-question-id"
+            $ref: '#/components/schemas/Question'
