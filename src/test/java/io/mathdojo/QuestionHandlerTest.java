@@ -21,7 +21,6 @@ import com.microsoft.azure.functions.ExecutionContext;
 public class QuestionHandlerTest {
 	private ExecutionContext mockExecContext;
 	private Question testQuestion1 = new Question("test-question-1", "test question 1", "test", "test", 50, "easy",  new String[]{""}, "test", new String[]{""}, "test");
-	private Question testQuestion =  new Question("test-question", "test question", "test", "test", 50, "easy",  new String[]{""}, "test", new String[]{""}, "test");
 	@Before
 	 public void setUp() {
          Logger testLogger = mock(Logger.class);
@@ -34,9 +33,9 @@ public class QuestionHandlerTest {
 		 when(mockExecContext.getFunctionName()).thenReturn("getQuestion");
 		AzureSpringBootRequestHandler<Question, Question> handler = new AzureSpringBootRequestHandler<>(
 				QuestionFunction.class);
-		Question getQuestionResult = handler.handleRequest(testQuestion, mockExecContext);
+		Question getQuestionResult = handler.handleRequest(TestConfig.PRECONFIGURED_QUESTION, mockExecContext);
 		handler.close();
-		assertEquals(getQuestionResult, testQuestion);
+		assertEquals(getQuestionResult, TestConfig.PRECONFIGURED_QUESTION);
 
 	}
 	
@@ -68,9 +67,9 @@ public class QuestionHandlerTest {
 		 when(mockExecContext.getFunctionName()).thenReturn("getQuestionById");
 		AzureSpringBootRequestHandler<Question, Question> handler = new AzureSpringBootRequestHandler<>(
 				QuestionFunction.class);
-		Question getQuestionResult = handler.handleRequest(testQuestion, mockExecContext);
+		Question getQuestionResult = handler.handleRequest(TestConfig.PRECONFIGURED_QUESTION, mockExecContext);
 		handler.close();
-		assertEquals(getQuestionResult, testQuestion);
+		assertEquals(getQuestionResult, TestConfig.PRECONFIGURED_QUESTION);
 
 	}
 	
@@ -92,8 +91,8 @@ public class QuestionHandlerTest {
 		 when(mockExecContext.getFunctionName()).thenReturn("deleteQuestion");
 		AzureSpringBootRequestHandler<Question, Question> handler = new AzureSpringBootRequestHandler<>(
 				QuestionFunction.class);
-		handler.handleRequest(testQuestion, mockExecContext);
-		 assertDoesNotThrow(() -> handler.handleRequest(testQuestion, mockExecContext));
+		handler.handleRequest(TestConfig.PRECONFIGURED_QUESTION, mockExecContext);
+		 assertDoesNotThrow(() -> handler.handleRequest(TestConfig.PRECONFIGURED_QUESTION, mockExecContext));
 		handler.close();
 		
 
