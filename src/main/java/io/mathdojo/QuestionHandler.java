@@ -2,8 +2,6 @@ package io.mathdojo;
 
 import java.util.Optional;
 
-import javax.servlet.HttpMethodConstraintElement;
-
 import org.springframework.cloud.function.adapter.azure.AzureSpringBootRequestHandler;
 
 import com.microsoft.azure.functions.ExecutionContext;
@@ -33,7 +31,7 @@ public class QuestionHandler extends AzureSpringBootRequestHandler<Question, Que
 
 	@FunctionName("createQuestion")
 	public Question execute(@HttpTrigger(name = "request", methods = {
-			HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS, route = "question") HttpRequestMessage<Optional<Question>> request,
+			HttpMethod.POST }, authLevel = AuthorizationLevel.ANONYMOUS, route = "questions") HttpRequestMessage<Optional<Question>> request,
 			ExecutionContext context) {
 		context.getLogger().info("Posting question with title: " + request.getBody().get().getQuestionTitle());
 		return handleRequest(request.getBody().get(), context);

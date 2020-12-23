@@ -38,7 +38,7 @@ public class QuestionFunction {
 	}
 
 	@Bean
-	public Consumer<Question> createQuestion() {
+	public Function<Question, Question> createQuestion() {
 		return question -> repository.save(question);
 	}
 
@@ -50,11 +50,11 @@ public class QuestionFunction {
 	}
 
 	@Bean
-	public Consumer<Question> updateQuestion() {
-		return new Consumer<Question>() {
+	public Function<Question, Question> updateQuestion() {
+		return new Function<Question, Question>() {
 
 			@Override
-			public void accept(Question question) {
+			public Question apply(Question question) {
 				Question oldQuestion = repository.findById(question.getId()).isPresent()
 						? repository.findById(question.getId()).get()
 						: null;
@@ -72,7 +72,7 @@ public class QuestionFunction {
 								: oldQuestion.getQuestionAnswerOptions(),
 						question.getAnswer() != null ? question.getAnswer() : oldQuestion.getAnswer());
 				;
-				repository.save(newQuestion);
+				return repository.save(newQuestion);
 			}
 
 		};
@@ -91,7 +91,7 @@ public class QuestionFunction {
 	}
 
 	@Bean
-	public Consumer<Topic> createTopic() {
+	public Function<Topic, Topic> createTopic() {
 		return topic -> tRepository.save(topic);
 	}
 
@@ -102,12 +102,12 @@ public class QuestionFunction {
 	}
 
 	@Bean
-	public Consumer<Topic> updateTopic() {
+	public Function<Topic, Topic> updateTopic() {
 
-		return new Consumer<Topic>() {
+		return new Function<Topic, Topic>() {
 
 			@Override
-			public void accept(Topic topic) {
+			public Topic apply(Topic topic) {
 				Topic oldTopic = tRepository.findById(topic.getId()).isPresent()
 						? tRepository.findById(topic.getId()).get()
 						: null;
@@ -115,7 +115,7 @@ public class QuestionFunction {
 						topic.getTopicTitle() != null ? topic.getTopicTitle() : oldTopic.getTopicTitle(),
 						topic.getName() != null ? topic.getName() : oldTopic.getName(),
 						topic.getQuestions() != null ? topic.getQuestions() : oldTopic.getQuestions());
-				tRepository.save(newTopic);
+				return tRepository.save(newTopic);
 			}
 
 		};
