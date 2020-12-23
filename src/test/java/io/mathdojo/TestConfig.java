@@ -22,7 +22,7 @@ public class TestConfig {
 	public static Topic PRECONFIGURED_TOPIC = new Topic("test-topic", "test topic", "test",new ArrayList<>());
 
 	@Bean
-	MathDojoQuestionRepository repository() {
+	MathDojoQuestionRepository qRepository() {
 		createdQuestions.put("test-question", PRECONFIGURED_QUESTION);
 
 		MathDojoQuestionRepository questionRepo = new MathDojoQuestionRepository() {

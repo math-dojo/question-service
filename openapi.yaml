@@ -39,31 +39,8 @@ paths:
         content: 
           application/json:
             schema:
-              type: object
-              properties:
-                body:
-                  type: string
-                sampleAnswer:
-                  type: string
-                successRate:
-                  type: number
-                  format: float
-                difficulty:
-                  type: string
-                  enum:
-                    - easy
-                    - medium
-                    - hard
-                hints:
-                  type: array
-                  items:
-                    type: string
-                parentTopicTitle:
-                  type: string
-                questionAnswerOptions:
-                  type: array
-                  items:
-                    type: string
+			  $ref: '#/components/schemas/Question'
+				
       responses:
         '204':
           description: OK
@@ -269,7 +246,7 @@ paths:
             type: string
             default: ""
           required: false
-      summary: "search for a topic by title"
+      summary: "return all topics available"
       responses: 
         '200':
           description: an array of the returned topics (or empty if none found)
@@ -324,13 +301,15 @@ components:
           type: string
         title:
           type: string
-        body:
+        questionBody:
           type: string
         sampleAnswer:
           type: string
+        answer:
+          type: string
         successRate:
           type: number
-          format: float
+          format: integer
         difficulty:
           type: string
           enum:
@@ -347,6 +326,7 @@ components:
           type: array
           items:
             type: string
+		
     Topic:
       type: object
       properties:

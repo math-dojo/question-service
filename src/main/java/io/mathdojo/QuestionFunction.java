@@ -2,6 +2,7 @@ package io.mathdojo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class QuestionFunction {
 	 */
 
 	@Autowired
-	public MathDojoQuestionRepository repository;
+	public MathDojoQuestionRepository qRepository;
 	@Autowired
 	public MathDojoTopicRepository tRepository;
 
@@ -32,20 +33,20 @@ public class QuestionFunction {
 	@Bean
 	public Function<Question, Question> getQuestion() {
 		return input -> Iterables.getFirst(
-				repository.findByQuestionTitle(input.getQuestionTitle()).stream()
+				qRepository.findByQuestionTitle(input.getQuestionTitle()).stream()
 						.filter(i -> i.getDifficulty().equals(input.getDifficulty())).collect(Collectors.toList()),
 				Question.EMPTY_DATABASE);
 	}
 
 	@Bean
 	public Function<Question, Question> createQuestion() {
-		return question -> repository.save(question);
+		return question -> qRepository.save(question);
 	}
 
 	@Bean
 	public Function<Question, Question> getQuestionById() {
-		return question -> repository.findById(question.getId()).isPresent()
-				? repository.findById(question.getId()).get()
+		return question -> qRepository.findById(question.getId()).isPresent()
+				? qRepository.findById(question.getId()).get()
 				: Question.EMPTY_DATABASE;
 	}
 
@@ -55,8 +56,8 @@ public class QuestionFunction {
 
 			@Override
 			public Question apply(Question question) {
-				Question oldQuestion = repository.findById(question.getId()).isPresent()
-						? repository.findById(question.getId()).get()
+				Question oldQuestion = qRepository.findById(question.getId()).isPresent()
+						? qRepository.findById(question.getId()).get()
 						: null;
 				Question newQuestion = new Question(question.getId(),
 						question.getQuestionTitle() != null ? question.getQuestionTitle()
@@ -72,7 +73,7 @@ public class QuestionFunction {
 								: oldQuestion.getQuestionAnswerOptions(),
 						question.getAnswer() != null ? question.getAnswer() : oldQuestion.getAnswer());
 				;
-				return repository.save(newQuestion);
+				return qRepository.save(newQuestion);
 			}
 
 		};
@@ -80,7 +81,7 @@ public class QuestionFunction {
 
 	@Bean
 	public Consumer<Question> deleteQuestion() {
-		return question -> repository.deleteById(question.getId());
+		return question -> qRepository.deleteById(question.getId());
 	}
 
 	@Bean
@@ -133,7 +134,11 @@ public class QuestionFunction {
 			@Override
 			public List<Question> apply(Topic t) {
 				List<Question> x = new ArrayList<>();
-				repository.findAllById(tRepository.findById(t.getId()).get().getQuestions()).forEach(x::add);
+				Optional<Topic> topicWrap = tRepository.findById(t.getId());
+				if(!topicWrap.isPresent()) {
+					throw new QuestionServiceException("topic not found");
+				}
+				qRepository.findAllById(topicWrap.get().getQuestions()).forEach(x::add);
 				return x;
 			}
 		};

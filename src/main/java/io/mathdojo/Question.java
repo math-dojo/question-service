@@ -13,7 +13,7 @@ public class Question {
 	//id must be kebab-case
 	@Id
 	private String id;
-    private String questionTitle;
+    private String title;
     private String questionBody;
     private String sampleAnswer;
     private Integer successRate;
@@ -26,11 +26,11 @@ public class Question {
     public Question() {
     }
 
-	public Question(String id, String questionTitle, String questionBody, String sampleAnswer, Integer successRate,
+	public Question(String id, String title, String questionBody, String sampleAnswer, Integer successRate,
 			String difficulty, String[] hints, String parentTopicTitle, String[] questionAnswerOptions, String answer) {
 		super();
 		this.id = id;
-		this.questionTitle = questionTitle;
+		this.title = title;
 		this.questionBody = questionBody;
 		this.sampleAnswer = sampleAnswer;
 		this.successRate = successRate;
@@ -54,11 +54,11 @@ public class Question {
 	}
 
 	public String getQuestionTitle() {
-		return questionTitle;
+		return title;
 	}
 
 	public void setQuestionTitle(String questionTitle) {
-		this.questionTitle = questionTitle;
+		this.title = questionTitle;
 	}
 
 	public String getQuestionBody() {
@@ -171,10 +171,10 @@ public class Question {
 				return false;
 		} else if (!questionBody.equals(other.questionBody))
 			return false;
-		if (questionTitle == null) {
-			if (other.questionTitle != null)
+		if (title == null) {
+			if (other.title != null)
 				return false;
-		} else if (!questionTitle.equals(other.questionTitle))
+		} else if (!title.equals(other.title))
 			return false;
 		if (sampleAnswer == null) {
 			if (other.sampleAnswer != null)

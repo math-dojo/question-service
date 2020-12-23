@@ -67,15 +67,6 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 		return handleRequest(topic, context);
 	}
 
-	@FunctionName("getQuestions")
-	public Topic executeGetQuestions(@HttpTrigger(name = "request", methods = {
-			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics/{topicId}/questions") HttpRequestMessage<Optional<Topic>> request,
-			ExecutionContext context, @BindingName("topicId") String topicId) {
-		context.getLogger().info("Retrieving Topic Questions");
-		Topic topic = new Topic();
-		topic.setId(topicId);
-
-		return handleRequest(topic, context);
-	}
+	
 
 }

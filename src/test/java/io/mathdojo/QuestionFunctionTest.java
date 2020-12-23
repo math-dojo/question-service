@@ -2,6 +2,7 @@ package io.mathdojo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -136,6 +137,12 @@ public class QuestionFunctionTest {
 		getQuestions.apply(testTopic);
 		 verify(qRepo, times(1)).findAllById(questionList);
 	}
+	@Test
+	public void testGetQuestionsExceptionThrown(){
+		Function<Topic, List<Question>> getQuestions =  qf.getQuestions();
+		assertThrows(QuestionServiceException.class, () -> getQuestions.apply(new Topic()), "topic not found");
+	}
+		
 
 
 }
