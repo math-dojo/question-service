@@ -118,7 +118,8 @@ public class QuestionFunctionTest {
 	public void testUpdateTopic(){
 		 Topic newTestTopic1 = new Topic("test-topic", "test topic", "testUpdate", new ArrayList<>(Arrays.asList("test-question-1", "test-question-2", "test-question-3")));
 		 Function<Topic, Topic> updateTopic =  qf.updateTopic();
-		 assertEquals(updateTopic.apply(testTopic), newTestTopic1);
+		 updateTopic.apply(newTestTopic1);
+		 verify(tRepo, times(1)).save(newTestTopic1);
 		 
 	}
 	
