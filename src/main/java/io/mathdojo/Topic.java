@@ -11,19 +11,19 @@ public class Topic {
 	public static Topic EMPTY_DATABASE = new Topic("The-database-is-empty", null, null, null);
 	@Id
 	private String id;
-	private String topicTitle;
-	private String name;
+	private String title;
+	private String body;
 	private List<String> questions;
 
 	public Topic() {
 
 	}
 
-	public Topic(String id, String title, String name, List<String> questions) {
+	public Topic(String id, String title, String body, List<String> questions) {
 		super();
 		this.id = id;
-		this.topicTitle = title;
-		this.name = name;
+		this.title = title;
+		this.body = body;
 		this.questions = questions;
 	}
 
@@ -40,19 +40,19 @@ public class Topic {
 	}
 
 	public String getTopicTitle() {
-		return topicTitle;
+		return title;
 	}
 
 	public void setTitle(String title) {
-		this.topicTitle = title;
+		this.title = title;
 	}
 
 	public String getName() {
-		return name;
+		return body;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.body = name;
 	}
 
 	public List<String> getQuestions() {
@@ -85,20 +85,20 @@ public class Topic {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (name == null) {
-			if (other.name != null)
+		if (body == null) {
+			if (other.body != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!body.equals(other.body))
 			return false;
 		if (questions == null) {
 			if (other.questions != null)
 				return false;
 		} else if (!questions.equals(other.questions))
 			return false;
-		if (topicTitle == null) {
-			if (other.topicTitle != null)
+		if (title == null) {
+			if (other.title != null)
 				return false;
-		} else if (!topicTitle.equals(other.topicTitle))
+		} else if (!title.equals(other.title))
 			return false;
 		return true;
 	}

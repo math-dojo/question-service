@@ -15,6 +15,10 @@ steps:
 - script: |
     mvnw -DfunctionAppName=question-service-$(Build.SourceBranchName) clean package
   displayName: Build package
+- script: |
+    cd ./integration-tests
+    npm run pretest && npm run local:test:windows
+    displayName: Run Local Integration Tests
 
 - task: AzureCLI@2
   displayName: 'Deploy app'
