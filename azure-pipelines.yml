@@ -49,33 +49,33 @@ stages:
       - job: Build_and_Exec_Unit_Tests
         variables:
           - template: environments/local.yml
-		steps:
-		- script: |
-		    mvnw -DfunctionAppName=question-service-$(Build.SourceBranchName) clean package
-		  displayName: Build package
-		- script: |
-		    cd ./integration-tests
-		    npm run pretest && npm run local:test:windows
-		    displayName: Run Local Integration Tests
-		
-		- task: AzureCLI@2
-		  displayName: 'Deploy app'
-		  inputs:
-		    addSpnToEnvironment: true
-		    failOnStandardError: true
-		    azureSubscription: question-service-hzprod-rg-access
-		    scriptType: ps
-		    scriptLocation: inlineScript
-		    inlineScript: |
-		        $xmlcontent = ("<settings xmlns=`"http://maven.apache.org/SETTINGS/1.0.0`" xmlns:xsi=`"http://www.w3.org/2001/XMLSchema-instance`" xsi:schemaLocation=`"http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd`"><servers><server><id>azure-auth</id><configuration><client>$env:servicePrincipalId</client><tenant>$env:tenantId</tenant><key>$env:servicePrincipalKey</key><environment>AZURE</environment></configuration></server></servers></settings>")
-		        $xmlcontent
-		        New-Item -Path '.\.mvn\settings.xml' -ItemType "file" -Value "$xmlcontent"
-		        cat .\.mvn\settings.xml
-		        .\mvnw --settings .\.mvn\settings.xml -DfunctionAppName=question-service-$(Build.SourceBranchName) azure-functions:deploy -X
-        - task: AzureCLI@2
+        steps:
+          - script: |
+              mvnw -DfunctionAppName=question-service-$(Build.SourceBranchName) clean package
+            displayName: Build package
+          - script: |
+              cd ./integration-tests
+              npm run pretest && npm run local:test:windows
+              displayName: Run Local Integration Tests
+          
+          - task: AzureCLI@2
+            displayName: 'Deploy app'
+            inputs:
+              addSpnToEnvironment: true
+              failOnStandardError: true
+              azureSubscription: question-service-hzprod-rg-access
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: |
+                  $xmlcontent = ("<settings xmlns=`"http://maven.apache.org/SETTINGS/1.0.0`" xmlns:xsi=`"http://www.w3.org/2001/XMLSchema-instance`" xsi:schemaLocation=`"http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd`"><servers><server><id>azure-auth</id><configuration><client>$env:servicePrincipalId</client><tenant>$env:tenantId</tenant><key>$env:servicePrincipalKey</key><environment>AZURE</environment></configuration></server></servers></settings>")
+                  $xmlcontent
+                  New-Item -Path '.\.mvn\settings.xml' -ItemType "file" -Value "$xmlcontent"
+                  cat .\.mvn\settings.xml
+                  .\mvnw --settings .\.mvn\settings.xml -DfunctionAppName=question-service-$(Build.SourceBranchName) azure-functions:deploy -X
+          - task: AzureCLI@2
             displayName: "Set Secret Mongo Uri on App"
             env:
-              SPRING_DATA_MONGODB_URI: $(mongodbUri)
+                SPRING_DATA_MONGODB_URI: $(mongodbUri)
             inputs:
               addSpnToEnvironment: true
               failOnStandardError: true
@@ -85,16 +85,16 @@ stages:
               inlineScript: |
                 az functionapp config appsettings set --name question-service-$(functionAppName) --resource-group math-dojo-hzprod-question-service --settings `SPRING_DATA_MONGODB_URI=$env:SPRING_DATA_MONGODB_URI` | Out-Null
           - ${{ each item in parameters }}:
-              - task: AzureCLI@2
-                displayName: "Set app param: ${{ item.value }}"
-                inputs:
-                  addSpnToEnvironment: true
-                  failOnStandardError: true
-                  azureSubscription: question-service-hzprod-rg-access
-                  scriptType: ps
-                  scriptLocation: inlineScript
-                  inlineScript: |
-                    az functionapp config appsettings set --name question-service-$(functionAppName) --resource-group math-dojo-hzprod-question-service --settings "${{ item.value }}=$(${{ item.value }})" | Out-Null
+          - task: AzureCLI@2
+            displayName: "Set app param: ${{ item.value }}"
+            inputs:
+                addSpnToEnvironment: true
+                failOnStandardError: true
+                azureSubscription: question-service-hzprod-rg-access
+                scriptType: ps
+                scriptLocation: inlineScript
+                inlineScript: |
+                  az functionapp config appsettings set --name question-service-$(functionAppName) --resource-group math-dojo-hzprod-question-service --settings "${{ item.value }}=$(${{ item.value }})" | Out-Null
   - stage: Run_Integration_Tests
     dependsOn:
     - Build
