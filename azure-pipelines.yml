@@ -54,7 +54,7 @@ stages:
           - template: environments/local.yml
         steps:
           - script: |
-              mvnw --no-transfer-progress -DfunctionAppName=question-service-$(functionAppName) clean package
+              mvnw  -DfunctionAppName=question-service-$(functionAppName) clean package
             displayName: Build package
           - task: PublishPipelineArtifact@1
             inputs:
