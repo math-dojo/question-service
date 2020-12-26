@@ -159,10 +159,10 @@ public class TestConfig {
 			}
 
 			@Override
-			public List<Question> findByQuestionTitle(String questionTitle) {
+			public List<Question> findByDifficulty(String difficulty) {
 				List<Question> retVal = new ArrayList<>();
 				for (String s : createdQuestions.keySet()) {
-					if (createdQuestions.get(s).getQuestionTitle().equals(questionTitle)) {
+					if (createdQuestions.get(s).getDifficulty().equals(difficulty)) {
 						retVal.add(createdQuestions.get(s));
 					}
 				}
@@ -301,17 +301,6 @@ public class TestConfig {
 			public List<Topic> findAll() {
 				// TODO Auto-generated method stub
 				return null;
-			}
-
-			@Override
-			public List<Topic> findByTopicTitle(String title) {
-				List<Topic> retVal = new ArrayList<>();
-				for (String s : createdTopics.keySet()) {
-					if (title.equals(createdTopics.get(s).getTopicTitle())) {
-						retVal.add(createdTopics.get(s));
-					}
-				}
-				return retVal;
 			}
 			
 		};

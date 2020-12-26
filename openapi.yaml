@@ -42,8 +42,12 @@ paths:
 			  $ref: '#/components/schemas/Question'
 				
       responses:
-        '204':
-          description: OK
+        '202':
+          description: Updated question
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
         '400':
           description: Bad request
           content:
@@ -64,8 +68,6 @@ paths:
       responses: 
         '204':
           description: the question was successfully deleted
-        '403':
-          description: Forbidden
         '404':
           description: A question with the specified ID was not found  
   /questions:
@@ -326,7 +328,7 @@ components:
           type: array
           items:
             type: string
-		
+	
     Topic:
       type: object
       properties:

@@ -1,0 +1,22 @@
+variables:
+- name: MATH_DOJO_ENV_NAME
+  value: 'pre-production'
+  readonly: true
+- name: MATH_DOJO_HTTP_REQUEST_SIGNATURE_EXPECTED_KEYID
+  value: '71c6394cb7d19563e815a86dee987914abc66af440d0fd14dbb9af1ca3eae044'
+  readonly: true
+- name: MATH_DOJO_HTTP_REQUEST_SIGNATURE_B64_DER_PUBLIC_KEY
+  value: 'MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtqFECrwpwhOR+RgPHvcyixT9iU2PHoe9ie4vU6QNYS8esboLzfOZiqJJshotYAqQweHfuewlJzLSKDfUNPz+7Naf93+VOHHRad0GsduBKJxDjNB9k4uMThzLpI09jEsAU7vGzJEna0Yyi5t13WFxuUFUT67qFptRrFe4zLj6fSoZbQlNIaEAuPwcoZISYWaFFi3xc//2YyiuyJ109ia6c4mhtt9MSguNTdfMeTjrWPdpYWktOhCF/gieXlZ7Jkb30Nux4cFedvtRkXIYCygX6rxgEGN7gCZJGMZsT2fuZZNJ1Xw0AAletonGBW75Asn6B5WPogMYZ58kG2BP2WzXRcpABGqffKroyDPoWAbodzmELk+YngnkLUC1Zh7N0FFGHRZXZIcKrdfcXX+d6rsHKo/+s6wzI2V+9xO/XK3ULhtm1GnsTVblKcmvWx4ioeTVj2tX2InqiQXETxQcV++C3v0ShLejX0TxN6MOJFnA3ReNsNiKfw799YP/b6ITQcZnoZjrxluc/3OgorwaxZqD8K3KAitLHHuZRBP3prW9ynufZUM1UqJzNotp7ZS8mCYDKe5TTtyNFwq5PJneS1A/+dM0L26d4Bza2MJQDZP9kNUtsjaZDceQVNjI0UR9GYJKx8DmPs/MAbhe47/Jp4q5avtEwyKp0Uokb9BskRCnhAcCAwEAAQ=='
+  readonly: true
+- name: appInsightsKey
+  value: '847d7f9e-408c-44ec-9bb5-e1f99872d8f2'
+  readonly: true
+- name: APPINSIGHTS_INSTRUMENTATIONKEY
+  value: '847d7f9e-408c-44ec-9bb5-e1f99872d8f2'
+  readonly: true
+- name: appInsightsKey
+  value: '847d7f9e-408c-44ec-9bb5-e1f99872d8f2'
+  readonly: true
+- name: SPRING_DATA_MONGODB_DATABASE
+  value: 'pre-production'
+  readonly: true

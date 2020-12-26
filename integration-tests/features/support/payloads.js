@@ -40,7 +40,7 @@ module.exports.payloads = {
   newTopic: {
     id: "pure-mathematics",
     title: "pure-mathematics",
-    name: "pure-mathematics",
+    body: "pure-mathematics",
     questions: [
       "try-me-first"
     ]
@@ -48,7 +48,7 @@ module.exports.payloads = {
   newTopicUpdate: {
     id: "pure-mathematics",
     title: "pure-mathematics",
-    name: "statistics",
+    body: "statistics",
     questions: [
       "try-me-first"
     ]

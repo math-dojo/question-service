@@ -1,7 +1,6 @@
 package io.mathdojo;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,8 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "questions")
 public class Question {	
-	public static Question EMPTY_DATABASE =  new Question("the-database-is-empty", null, null, null, 0, null, null, null, null, null);
-	//id must be kebab-case
 	@Id
 	private String id;
     private String title;
@@ -41,9 +38,6 @@ public class Question {
 		this.answer = answer;
 	}
 
-	public Question(Map<String, String> queryParameters) {
-		this("the database is empty", queryParameters.get("title"), null, null, null, queryParameters.get("difficulty"), null, null, null, null);
-	}
 
 	public String getId() {
 		return id;
@@ -123,6 +117,23 @@ public class Question {
 
 	public void setAnswer(String answer) {
 		this.answer = answer;
+	}
+	
+	public Question updateNonNullAttributes(Question question) {
+		Question newQuestion = new Question(question.getId(),
+				question.getQuestionTitle() != null ? question.getQuestionTitle()
+						: this.getQuestionTitle(),
+				question.getQuestionBody() != null ? question.getQuestionBody() : this.getQuestionBody(),
+				question.getSampleAnswer() != null ? question.getSampleAnswer() : this.getSampleAnswer(),
+				question.getSuccessRate() != null ? question.getSuccessRate() : this.getSuccessRate(),
+				question.getDifficulty() != null ? question.getDifficulty() : this.getDifficulty(),
+				question.getHints() != null ? question.getHints() : this.getHints(),
+				question.getParentTopicTitle() != null ? question.getParentTopicTitle()
+						: this.getParentTopicTitle(),
+				question.getQuestionAnswerOptions() != null ? question.getQuestionAnswerOptions()
+						: this.getQuestionAnswerOptions(),
+				question.getAnswer() != null ? question.getAnswer() : this.getAnswer());
+		return newQuestion;
 	}
 
 	@Override

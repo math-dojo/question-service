@@ -1,14 +1,12 @@
 package io.mathdojo;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "topics")
 public class Topic {
-	public static Topic EMPTY_DATABASE = new Topic("The-database-is-empty", null, null, null);
 	@Id
 	private String id;
 	private String title;
@@ -25,10 +23,6 @@ public class Topic {
 		this.title = title;
 		this.body = body;
 		this.questions = questions;
-	}
-
-	public Topic(Map<String, String> queryParameters) {
-		this(queryParameters.get("title"), queryParameters.get("title"), null, null);
 	}
 
 	public String getId() {
@@ -61,6 +55,15 @@ public class Topic {
 
 	public void setQuestions(List<String> questions) {
 		this.questions = questions;
+	}
+	
+	public Topic updateNonNullAttributes(Topic topic) {
+		Topic newTopic = new Topic(topic.getId(),
+				topic.getTopicTitle() != null ? topic.getTopicTitle() : this.getTopicTitle(),
+				topic.getName() != null ? topic.getName() : this.getName(),
+				topic.getQuestions() != null ? topic.getQuestions() : this.getQuestions());
+		return newTopic;
+				
 	}
 
 	@Override

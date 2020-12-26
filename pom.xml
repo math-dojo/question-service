@@ -73,6 +73,11 @@
 			<artifactId>guava</artifactId>
 			<version>28.2-jre</version>
 		</dependency>
+		<dependency>
+		    <groupId>com.github.math-dojo</groupId>
+		    <artifactId>api-gateway-verification</artifactId>
+		    <version>ft1-SNAPSHOT</version>
+	    </dependency>
 
 
 	</dependencies>
@@ -230,6 +235,10 @@
 	</build>
 
 	<repositories>
+	    <repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
 		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
