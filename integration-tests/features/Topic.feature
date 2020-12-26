@@ -7,12 +7,7 @@ Feature: Features related to Topic Management
     Given I generate a random id json payload called 'newTopic'
     And I make a POST to the function at '/topics'
 
-  @createtopic @errorHandling
-  Scenario: POST to /topics with valid body returns created topic
-    Given I generate a json payload called 'newTopic'
-    When I make a POST to the function at '/topics'
-    Then I should get a status code 400
-
+  
  @getTopicById
   Scenario: GET to /topics/{topicId} with valid body returns created topic
     When I make a GET to the function at '/topics/pure-mathematics'
@@ -23,6 +18,11 @@ Feature: Features related to Topic Management
   Scenario: GET to /topics/{topicId} with valid body returns created topic
     When I make a GET to the function at '/topics/doesnt-exist'
     Then I should get a status code 404 
+@createtopic @errorHandling
+  Scenario: POST to /topics with valid body returns created topic
+    Given I generate a json payload called 'newTopic'
+    When I make a POST to the function at '/topics'
+    Then I should get a status code 400
 
 @updateTopicById
   Scenario: PUT to /topics/{topicId} with valid body returns created topic
