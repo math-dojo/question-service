@@ -15,10 +15,12 @@ parameters:
   - name: SPRING_DATA_MONGODB_DATABASE
     default: "SPRING_DATA_MONGODB_DATABASE"
     type: string
+
 trigger:
-- master
-- develop
-#- ft*
+  - master
+  - develop
+#  - ft*  # Mute feature branch build. These can be built either on PR or unmuted for testing before a PR.
+
 variables:
   - ${{ if eq(variables['Build.SourceBranchName'], 'master') }}: # only works if you have a master branch
       - template: environments/pre-production.yml
@@ -37,7 +39,8 @@ variables:
       - group: 'secrets.production'
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: "windows-2019"
+
 stages:
   - stage: Build
     variables:
@@ -49,30 +52,72 @@ stages:
       - job: Build_and_Exec_Unit_Tests
         variables:
           - template: environments/local.yml
-		steps:
-		- script: |
-		    mvnw -DfunctionAppName=question-service-$(Build.SourceBranchName) clean package
-		  displayName: Build package
-		- script: |
-		    cd ./integration-tests
-		    npm run pretest && npm run local:test:windows
-		    displayName: Run Local Integration Tests
-		
-		- task: AzureCLI@2
-		  displayName: 'Deploy app'
-		  inputs:
-		    addSpnToEnvironment: true
-		    failOnStandardError: true
-		    azureSubscription: question-service-hzprod-rg-access
-		    scriptType: ps
-		    scriptLocation: inlineScript
-		    inlineScript: |
-		        $xmlcontent = ("<settings xmlns=`"http://maven.apache.org/SETTINGS/1.0.0`" xmlns:xsi=`"http://www.w3.org/2001/XMLSchema-instance`" xsi:schemaLocation=`"http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd`"><servers><server><id>azure-auth</id><configuration><client>$env:servicePrincipalId</client><tenant>$env:tenantId</tenant><key>$env:servicePrincipalKey</key><environment>AZURE</environment></configuration></server></servers></settings>")
-		        $xmlcontent
-		        New-Item -Path '.\.mvn\settings.xml' -ItemType "file" -Value "$xmlcontent"
-		        cat .\.mvn\settings.xml
-		        .\mvnw --settings .\.mvn\settings.xml -DfunctionAppName=question-service-$(Build.SourceBranchName) azure-functions:deploy -X
-        - task: AzureCLI@2
+        steps:
+          - script: |
+              mvnw  -DfunctionAppName=question-service-$(functionAppName) clean package
+            displayName: Build package
+          - task: PublishPipelineArtifact@1
+            inputs:
+              path: $(System.DefaultWorkingDirectory)
+              artifact: workingDir
+          - script: |
+              npm i -g azure-functions-core-tools@3 --unsafe-perm true
+            displayName: Install Azure Func Core Tools
+          - script: |
+              cd ./integration-tests
+              npm run pretest && npm run local:test:windows
+            displayName: Run Local Integration Tests
+
+  - stage: Deploy
+    variables:
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}: 
+        functionAppName: "pr$(System.PullRequest.PullRequestNumber)"
+      ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}: 
+        functionAppName: "$(Build.SourceBranchName)"
+    jobs:
+      - job: Deploy_App_and_Setup_Monitoring
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifact: workingDir
+              path: $(System.DefaultWorkingDirectory)
+          - task: AzureCLI@2
+            displayName: "Deploy app"
+            inputs:
+              addSpnToEnvironment: true
+              failOnStandardError: true
+              azureSubscription: question-service-hzprod-rg-access
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: |
+                $xmlcontent = ("<settings xmlns=`"http://maven.apache.org/SETTINGS/1.0.0`" xmlns:xsi=`"http://www.w3.org/2001/XMLSchema-instance`" xsi:schemaLocation=`"http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd`"><servers><server><id>azure-auth</id><configuration><client>$env:servicePrincipalId</client><tenant>$env:tenantId</tenant><key>$env:servicePrincipalKey</key><environment>AZURE</environment></configuration></server></servers></settings>")
+                $xmlcontent
+                New-Item -Path '.\.mvn\settings.xml' -ItemType "file" -Value "$xmlcontent"
+                cat .\.mvn\settings.xml
+                .\mvnw --settings .\.mvn\settings.xml --no-transfer-progress -DfunctionAppName=question-service-$(functionAppName) azure-functions:deploy
+
+          - task: AzureCLI@2
+            displayName: "Set app insights key"
+            inputs:
+              addSpnToEnvironment: true
+              failOnStandardError: true
+              azureSubscription: question-service-hzprod-rg-access
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: |
+                az functionapp config appsettings set --name question-service-$(functionAppName) --resource-group math-dojo-hzprod-question-service --settings "APPINSIGHTS_INSTRUMENTATIONKEY=$(APPINSIGHTS_INSTRUMENTATIONKEY)" "APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
+
+  - stage: Configure_App
+    variables:
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}: 
+        functionAppName: "pr$(System.PullRequest.PullRequestNumber)"
+      ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}: 
+        functionAppName: "$(Build.SourceBranchName)"
+    jobs:
+      - job: Configure_Function_Parameters
+        displayName: Set Env Params
+        steps:
+          - task: AzureCLI@2
             displayName: "Set Secret Mongo Uri on App"
             env:
               SPRING_DATA_MONGODB_URI: $(mongodbUri)
@@ -95,9 +140,10 @@ stages:
                   scriptLocation: inlineScript
                   inlineScript: |
                     az functionapp config appsettings set --name question-service-$(functionAppName) --resource-group math-dojo-hzprod-question-service --settings "${{ item.value }}=$(${{ item.value }})" | Out-Null
+
   - stage: Run_Integration_Tests
     dependsOn:
-    - Build
+    - Configure_App
     variables:
       ${{ if eq(variables['Build.Reason'], 'PullRequest') }}: 
         functionAppName: "pr$(System.PullRequest.PullRequestNumber)"
