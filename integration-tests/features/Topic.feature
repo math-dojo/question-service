@@ -49,9 +49,7 @@ Feature: Features related to Topic Management
     When I make a DELETE to the function at '/topics/pure-mathematics'
     Then I should get a status code 204
     
-
 @getTopics
   Scenario: GET to /topics  returns all topics
     When I make a GET to the function at '/topics'
-    Then I should get a status code 200
-    And the response should be a superset of all the keys and values set from 'newTopic'        
+    Then I should get a status code 200     
