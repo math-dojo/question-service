@@ -7,7 +7,11 @@ Feature: Features related to Topic Management
     Given I generate a random id json payload called 'newTopic'
     And I make a POST to the function at '/topics'
 
-  
+ 
+ @deleteTopicById@errorHandling
+  Scenario: DELETE to /topics with valid body is completed
+    When I make a DELETE to the function at '/topics/doesnt-exist'
+    Then I should get a status code 404
  @getTopicById
   Scenario: GET to /topics/{topicId} with valid body returns created topic
     When I make a GET to the function at '/topics/pure-mathematics'
@@ -45,10 +49,7 @@ Feature: Features related to Topic Management
     When I make a DELETE to the function at '/topics/pure-mathematics'
     Then I should get a status code 204
     
-@deleteTopicById@errorHandling
-  Scenario: DELETE to /topics with valid body is completed
-    When I make a DELETE to the function at '/topics/doesnt-exist'
-    Then I should get a status code 404
+
 @getTopics
   Scenario: GET to /topics  returns all topics
     When I make a GET to the function at '/topics'
