@@ -1,4 +1,4 @@
-package io.mathdojo;
+package io.mathdojo.questionservice.handlers;
 
 import java.util.Optional;
 
@@ -11,6 +11,8 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.BindingName;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
+
+import io.mathdojo.questionservice.model.Topic;
 
 /**
  * 

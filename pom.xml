@@ -28,7 +28,7 @@
 		<functionAppRegion>uksouth</functionAppRegion>
 		<stagingDirectory>${project.build.directory}/azure-functions/${functionAppName}</stagingDirectory>
 		<functionResourceGroup>math-dojo-hzprod-question-service</functionResourceGroup>
-		<start-class>io.mathdojo.QuestionFunction</start-class>
+		<start-class>io.mathdojo.questionservice.configuration.QuestionServiceApplication</start-class>
 		<wrapper.version>1.0.22.RELEASE</wrapper.version>
 	</properties>
 

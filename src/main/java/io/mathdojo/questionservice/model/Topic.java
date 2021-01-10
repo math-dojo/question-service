@@ -1,4 +1,4 @@
-package io.mathdojo;
+package io.mathdojo.questionservice.model;
 
 import java.util.List;
 import java.util.Map;

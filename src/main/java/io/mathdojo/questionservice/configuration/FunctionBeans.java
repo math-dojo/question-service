@@ -1,4 +1,4 @@
-package io.mathdojo;
+package io.mathdojo.questionservice.configuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +8,16 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import com.google.common.collect.Iterables;
 
-@SpringBootApplication
-public class QuestionFunction {
+import io.mathdojo.questionservice.model.Question;
+import io.mathdojo.questionservice.model.Topic;
+
+@Configuration
+public class FunctionBeans {
 	/**
 	 * This class contains all the functions that can be called in this service.
 	 * Functions are called through RequestHandler classes
@@ -25,9 +28,7 @@ public class QuestionFunction {
 	@Autowired
 	public MathDojoTopicRepository tRepository;
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(QuestionFunction.class, args);
-	}
+	
 
 	@Bean
 	public Function<Question, Question> getQuestion() {
