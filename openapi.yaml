@@ -328,6 +328,8 @@ components:
           type: string
         sampleAnswer:
           type: string
+        answer:
+          type: string
         successRate:
           type: number
           format: float

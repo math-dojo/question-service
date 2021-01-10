@@ -10,11 +10,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "questions")
 public class Question {	
 	public static Question EMPTY_DATABASE =  new Question("the-database-is-empty", null, null, null, 0, null, null, null, null, null);
-	//id must be kebab-case
+
 	@Id
 	private String id;
-    private String questionTitle;
-    private String questionBody;
+    private String title;
+    private String body;
     private String sampleAnswer;
     private Integer successRate;
     private String difficulty;
@@ -30,8 +30,8 @@ public class Question {
 			String difficulty, String[] hints, String parentTopicTitle, String[] questionAnswerOptions, String answer) {
 		super();
 		this.id = id;
-		this.questionTitle = questionTitle;
-		this.questionBody = questionBody;
+		this.title = questionTitle;
+		this.body = questionBody;
 		this.sampleAnswer = sampleAnswer;
 		this.successRate = successRate;
 		this.difficulty = difficulty;
@@ -54,19 +54,19 @@ public class Question {
 	}
 
 	public String getQuestionTitle() {
-		return questionTitle;
+		return title;
 	}
 
 	public void setQuestionTitle(String questionTitle) {
-		this.questionTitle = questionTitle;
+		this.title = questionTitle;
 	}
 
 	public String getQuestionBody() {
-		return questionBody;
+		return body;
 	}
 
 	public void setQuestionBody(String questionBody) {
-		this.questionBody = questionBody;
+		this.body = questionBody;
 	}
 
 	public String getSampleAnswer() {
@@ -166,15 +166,15 @@ public class Question {
 			return false;
 		if (!Arrays.equals(questionAnswerOptions, other.questionAnswerOptions))
 			return false;
-		if (questionBody == null) {
-			if (other.questionBody != null)
+		if (body == null) {
+			if (other.body != null)
 				return false;
-		} else if (!questionBody.equals(other.questionBody))
+		} else if (!body.equals(other.body))
 			return false;
-		if (questionTitle == null) {
-			if (other.questionTitle != null)
+		if (title == null) {
+			if (other.title != null)
 				return false;
-		} else if (!questionTitle.equals(other.questionTitle))
+		} else if (!title.equals(other.title))
 			return false;
 		if (sampleAnswer == null) {
 			if (other.sampleAnswer != null)
@@ -184,6 +184,23 @@ public class Question {
 		if (successRate != other.successRate)
 			return false;
 		return true;
+	}
+
+	public Question updateNonNullAttributes(Question question) {
+		Question newQuestion = new Question(question.getId(),
+				question.getQuestionTitle() != null ? question.getQuestionTitle()
+						: this.getQuestionTitle(),
+				question.getQuestionBody() != null ? question.getQuestionBody() : this.getQuestionBody(),
+				question.getSampleAnswer() != null ? question.getSampleAnswer() : this.getSampleAnswer(),
+				question.getSuccessRate() != null ? question.getSuccessRate() : this.getSuccessRate(),
+				question.getDifficulty() != null ? question.getDifficulty() : this.getDifficulty(),
+				question.getHints() != null ? question.getHints() : this.getHints(),
+				question.getParentTopicTitle() != null ? question.getParentTopicTitle()
+						: this.getParentTopicTitle(),
+				question.getQuestionAnswerOptions() != null ? question.getQuestionAnswerOptions()
+						: this.getQuestionAnswerOptions(),
+				question.getAnswer() != null ? question.getAnswer() : this.getAnswer());
+		return newQuestion;
 	}
 
 

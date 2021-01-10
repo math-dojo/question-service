@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.google.common.collect.Iterables;
 
 import io.mathdojo.questionservice.model.Question;
 import io.mathdojo.questionservice.model.Topic;
@@ -24,117 +22,139 @@ public class FunctionBeans {
 	 */
 
 	@Autowired
-	public MathDojoQuestionRepository repository;
+	public MathDojoQuestionRepository qRepository;
 	@Autowired
 	public MathDojoTopicRepository tRepository;
 
-	
-
 	@Bean
-	public Function<Question, Question> getQuestion() {
-		return input -> Iterables.getFirst(
-				repository.findByQuestionTitle(input.getQuestionTitle()).stream()
-						.filter(i -> i.getDifficulty().equals(input.getDifficulty())).collect(Collectors.toList()),
-				Question.EMPTY_DATABASE);
+	public Function<Question, List<Question>> searchQuestionsByTitleAndDifficulty() {
+		return input -> {
+			return qRepository.findByQuestionTitle(input.getQuestionTitle()).stream()
+					.filter(q -> q.getDifficulty().equals(input.getDifficulty())).collect(Collectors.toList());
+
+		};
 	}
 
 	@Bean
-	public Consumer<Question> createQuestion() {
-		return question -> repository.save(question);
+	public Function<Question, Question> createQuestion() {
+		return question -> {
+			if (qRepository.existsById(question.getId())) {
+				throw new QuestionServiceException(QuestionServiceException.ALREADY_EXISTS_MESSAGE);
+			}
+			return qRepository.save(question);
+		};
 	}
 
 	@Bean
-	public Function<Question, Question> getQuestionById() {
-		return question -> repository.findById(question.getId()).isPresent()
-				? repository.findById(question.getId()).get()
-				: Question.EMPTY_DATABASE;
+	public Function<String, Question> getQuestionById() {
+		return input -> {
+			if (!qRepository.existsById(input)) {
+				throw new QuestionServiceException(QuestionServiceException.NOT_FOUND_MESSAGE);
+			}
+			return qRepository.findById(input).get();
+
+		};
 	}
 
 	@Bean
-	public Consumer<Question> updateQuestion() {
-		return new Consumer<Question>() {
+	public Function<Question, Question> updateQuestion() {
+		return new Function<Question, Question>() {
 
 			@Override
-			public void accept(Question question) {
-				Question oldQuestion = repository.findById(question.getId()).isPresent()
-						? repository.findById(question.getId()).get()
-						: null;
-				Question newQuestion = new Question(question.getId(),
-						question.getQuestionTitle() != null ? question.getQuestionTitle()
-								: oldQuestion.getQuestionTitle(),
-						question.getQuestionBody() != null ? question.getQuestionBody() : oldQuestion.getQuestionBody(),
-						question.getSampleAnswer() != null ? question.getSampleAnswer() : oldQuestion.getSampleAnswer(),
-						question.getSuccessRate() != null ? question.getSuccessRate() : oldQuestion.getSuccessRate(),
-						question.getDifficulty() != null ? question.getDifficulty() : oldQuestion.getDifficulty(),
-						question.getHints() != null ? question.getHints() : oldQuestion.getHints(),
-						question.getParentTopicTitle() != null ? question.getParentTopicTitle()
-								: oldQuestion.getParentTopicTitle(),
-						question.getQuestionAnswerOptions() != null ? question.getQuestionAnswerOptions()
-								: oldQuestion.getQuestionAnswerOptions(),
-						question.getAnswer() != null ? question.getAnswer() : oldQuestion.getAnswer());
-				;
-				repository.save(newQuestion);
+			public Question apply(Question question) {
+				if (!qRepository.existsById(question.getId())) {
+					throw new QuestionServiceException(QuestionServiceException.NOT_FOUND_MESSAGE);
+				}
+				Question oldQuestion = qRepository.findById(question.getId()).get();
+				return qRepository.save(oldQuestion.updateNonNullAttributes(question));
 			}
 
 		};
 	}
 
 	@Bean
-	public Consumer<Question> deleteQuestion() {
-		return question -> repository.deleteById(question.getId());
+	public Consumer<String> deleteQuestion() {
+		return input -> {
+			if (!qRepository.existsById(input)) {
+				throw new QuestionServiceException(QuestionServiceException.NOT_FOUND_MESSAGE);
+			}
+			qRepository.deleteById(input);
+
+		};
 	}
 
 	@Bean
-	public Function<Topic, Topic> getTopic() {
-		return input -> Iterables.getFirst(
-				tRepository.findByTopicTitle(input.getTopicTitle()).stream().collect(Collectors.toList()),
-				Topic.EMPTY_DATABASE);
+	public Function<Topic, Topic> createTopic() {
+		return topic -> {
+			if (tRepository.existsById(topic.getId())) {
+				throw new QuestionServiceException(QuestionServiceException.ALREADY_EXISTS_MESSAGE);
+			}
+			return tRepository.save(topic);
+		};
 	}
 
 	@Bean
-	public Consumer<Topic> createTopic() {
-		return topic -> tRepository.save(topic);
+	public Function<String, Topic> getTopicById() {
+		return input -> {
+			if (!tRepository.existsById(input)) {
+				throw new QuestionServiceException(QuestionServiceException.NOT_FOUND_MESSAGE);
+			}
+			return tRepository.findById(input).get();
+
+		};
 	}
 
 	@Bean
-	public Function<Topic, Topic> getTopicById() {
-		return topic -> tRepository.findById(topic.getId()).isPresent() ? tRepository.findById(topic.getId()).get()
-				: Topic.EMPTY_DATABASE;
-	}
+	public Function<Topic, Topic> updateTopic() {
 
-	@Bean
-	public Consumer<Topic> updateTopic() {
-
-		return new Consumer<Topic>() {
+		return new Function<Topic, Topic>() {
 
 			@Override
-			public void accept(Topic topic) {
-				Topic oldTopic = tRepository.findById(topic.getId()).isPresent()
-						? tRepository.findById(topic.getId()).get()
-						: null;
-				Topic newTopic = new Topic(topic.getId(),
-						topic.getTopicTitle() != null ? topic.getTopicTitle() : oldTopic.getTopicTitle(),
-						topic.getName() != null ? topic.getName() : oldTopic.getName(),
-						topic.getQuestions() != null ? topic.getQuestions() : oldTopic.getQuestions());
-				tRepository.save(newTopic);
+			public Topic apply(Topic topic) {
+				if (!tRepository.existsById(topic.getId())) {
+					throw new QuestionServiceException(QuestionServiceException.NOT_FOUND_MESSAGE);
+				}
+				Topic oldTopic = tRepository.findById(topic.getId()).get();
+				return tRepository.save(oldTopic.updateNonNullAttributes(topic));
 			}
 
 		};
 	}
 
 	@Bean
-	public Consumer<Topic> deleteTopic() {
-		return topic -> tRepository.deleteById(topic.getId());
+	public Consumer<String> deleteTopic() {
+		return input -> {
+			if (!tRepository.existsById(input)) {
+				throw new QuestionServiceException(QuestionServiceException.NOT_FOUND_MESSAGE);
+			}
+			tRepository.deleteById(input);
+
+		};
+
 	}
 
 	@Bean
-	public Function<Topic, List<Question>> getQuestions() {
-
-		return new Function<Topic, List<Question>>() {
+	public Supplier<List<Topic>> getTopics() {
+		return new Supplier<List<Topic>>() {
 			@Override
-			public List<Question> apply(Topic t) {
+			public List<Topic> get() {
+				return tRepository.findAll();
+			}
+
+		};
+	}
+
+	@Bean
+	public Function<String, List<Question>> getQuestions() {
+
+		return new Function<String, List<Question>>() {
+			@Override
+			public List<Question> apply(String t) {
 				List<Question> x = new ArrayList<>();
-				repository.findAllById(tRepository.findById(t.getId()).get().getQuestions()).forEach(x::add);
+				if (!tRepository.existsById(t)) {
+					throw new QuestionServiceException(QuestionServiceException.NOT_FOUND_MESSAGE);
+				}
+				qRepository.findAllById(tRepository.findById(t).get().getQuestions()).forEach(x::add);
 				return x;
 			}
 		};

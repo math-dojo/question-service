@@ -1,80 +1,157 @@
 package io.mathdojo.questionservice.configuration;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import io.mathdojo.questionservice.model.Question;
 import io.mathdojo.questionservice.model.Topic;
-
+@RunWith(MockitoJUnitRunner.class)
 public class FunctionBeansTest {
 
-	private Question question;
-	private FunctionBeans qf = new FunctionBeans();
-	private MathDojoQuestionRepository repo = mock(MathDojoQuestionRepository.class);
-	private MathDojoTopicRepository trepo = mock(MathDojoTopicRepository.class);
-	private Topic topic = new Topic();
+	private Question testQuestion1 = new Question("test-question-1", "test question 1", "test", "test", 50, "easy",  new String[]{""}, "test", new String[]{""}, "test");
+	private Question testQuestion2 = new Question("test-question-2", "test question 2", "test", "test", 40, "medium",  new String[]{""}, "test", new String[]{""}, "test");
+	private Question testQuestion3 = new Question("test-question-3", "test question 3", "test", "test", 30, "hard",  new String[]{""}, "test", new String[]{""}, "test");
+	private List<String> questionList = new ArrayList<>(Arrays.asList("test-question-1", "test-question-2", "test-question-3"));
+	private Topic testTopic = new Topic("test-topic", "test topic", "test", questionList);
+	private Topic testTopic1 = new Topic("test-topic-1", "test topic1", "test", questionList);
+
+	
+	@Mock
+	private MathDojoQuestionRepository qRepo;
+	@Mock
+	private MathDojoTopicRepository tRepo;
+	@InjectMocks
+	private FunctionBeans qf ;
+	
 	Map<String, String> headers;
 	Map<String, String> queryParams;
 
 	@Before
 	public void setUp() {
-		question = new Question();
-		question.setQuestionTitle("test");
-		question.setDifficulty("easy");
-		question.setId("test");
-		qf.repository = repo;
-		qf.tRepository = trepo;
-		List<Question> questionList = new ArrayList<Question>();
-		questionList.add(question);
-		when(repo.findByQuestionTitle("test")).thenReturn(questionList);
-		when(repo.findById("test")).thenReturn(Optional.of(question));
-		when(repo.findAllById(new ArrayList<String>(Arrays.asList("test")))).thenReturn(questionList);
-		topic.setId("test");
-		topic.setName("test");
-		topic.setTitle("test");
-		topic.setQuestions(new ArrayList<String>(Arrays.asList("test")));
-		List<Topic> topicList = new ArrayList<Topic>();
-		topicList.add(topic);
-		when(trepo.findByTopicTitle("test")).thenReturn(topicList);
-		when(trepo.findById("test")).thenReturn(Optional.of(topic));
-		headers = new HashMap<>();
-		queryParams = new HashMap<>();
+		Mockito.when(qRepo.save(Mockito.any(Question.class))).thenAnswer(new Answer<Question>() {
+            public Question answer(InvocationOnMock invocation) {
+                return (Question) invocation.getArguments()[0];
+            }
+        });
+		Mockito.when(tRepo.save(Mockito.any(Topic.class))).thenAnswer(new Answer<Topic>() {
+            public Topic answer(InvocationOnMock invocation) {
+                return (Topic) invocation.getArguments()[0];
+            }
+        });
+		Mockito.when(tRepo.findById("test-topic")).thenReturn(Optional.of(testTopic));
+		Mockito.when(qRepo.findByQuestionTitle(testQuestion1.getQuestionTitle())).thenReturn(new ArrayList<Question>(Arrays.asList(testQuestion1)));
+		Mockito.lenient().when(qRepo.existsById("test-question-1")).thenReturn(true);
+		Mockito.lenient().when(qRepo.existsById("test-question-2")).thenReturn(true);
+		Mockito.lenient().when(qRepo.existsById("test-question-3")).thenReturn(false);
+		Mockito.lenient().when(tRepo.existsById("test-topic")).thenReturn(true);
+		Mockito.lenient().when(qRepo.findById("test-question-1")).thenReturn(Optional.of(testQuestion1));
+		Mockito.lenient().when(qRepo.findById("test-question-2")).thenReturn(Optional.of(testQuestion2));
+		Mockito.lenient().when(qRepo.findById("test-question-3")).thenReturn(Optional.of(testQuestion3));
+
 
 	}
 
 	@Test
-	public void testQuestionAndTopicFunctions() {
-		Question getQuestionResult = qf.getQuestion().apply(question);
-		assertEquals(getQuestionResult, question);
-		qf.updateQuestion().accept(question);
-		verify(repo, times(1)).save(question);
-		Question getQuestionByIdResult = qf.getQuestionById().apply(question);
-		assertEquals(getQuestionByIdResult, question);
-		qf.deleteQuestion().accept(question);
-		verify(repo, times(1)).deleteById("test");
-		Topic getTopicResult = qf.getTopic().apply(topic);
-		assertEquals(getTopicResult, topic);
-		qf.updateTopic().accept(topic);
-		verify(trepo, times(1)).save(topic);
-		Topic getTopicByIdResult = qf.getTopicById().apply(topic);
-		assertEquals(getTopicByIdResult, topic);
-		qf.deleteTopic().accept(topic);
-		verify(trepo, times(1)).deleteById("test");
-		assertEquals(qf.getQuestions().apply(topic).get(0), question);
-
+	public void testCreateQuestion(){
+		Function<Question, Question> createQuestion =  qf.createQuestion();
+		 assertDoesNotThrow(() -> createQuestion.apply(testQuestion3));
+		 verify(qRepo, times(1)).save(testQuestion3);
 	}
-
+	@Test
+	public void testCreateQuestionThrowsException(){
+		Function<Question, Question> createQuestion =  qf.createQuestion();
+		assertThrows(QuestionServiceException.class, () -> createQuestion.apply(testQuestion1), QuestionServiceException.ALREADY_EXISTS_MESSAGE);
+	}
+	@Test	
+	public void testSearchQuestionsByTitleAndDifficultyReturnsQuestions(){
+		 Function<Question, List<Question>> getQuestions =  qf.searchQuestionsByTitleAndDifficulty();
+		assertEquals(getQuestions.apply(testQuestion1), new ArrayList<Question>(Arrays.asList(testQuestion1)));	
+	}
+	@Test	
+	public void testGetQuestionByIdReturnsQuestion(){
+		 Function<String, Question> getQuestionById =  qf.getQuestionById();
+		assertEquals(getQuestionById.apply(testQuestion1.getId()), testQuestion1);	
+	}
+	@Test	
+	public void testUpdateQuestion(){
+		 Question newTestQuestion1 = new Question("test-question-1", "test question 1", "test", "test", 50, "hard",  new String[]{""}, "test", new String[]{""}, "test");
+		 Function<Question, Question> updateQuestion =  qf.updateQuestion();
+		 updateQuestion.apply(newTestQuestion1);
+		 verify(qRepo, times(1)).save(newTestQuestion1);
+		 
+	}
+	
+	@Test
+	public void testDeleteQuestion(){
+		 Consumer<String> deleteQuestion =  qf.deleteQuestion();
+		 assertDoesNotThrow(() -> deleteQuestion.accept(testQuestion1.getId()));
+		 verify(qRepo, times(1)).deleteById("test-question-1");
+	}
+	
+	@Test
+	public void testCreateTopic(){
+		Function<Topic, Topic> createTopic =  qf.createTopic();
+		 assertEquals(createTopic.apply(testTopic1), testTopic1);
+		 verify(tRepo, times(1)).save(testTopic1);
+	}
+	
+	@Test	
+	public void testGetTopicReturnsTopic(){
+		 Function<String, Topic> getTopic =  qf.getTopicById();
+		assertEquals(getTopic.apply(testTopic.getId()), testTopic);	
+	}
+	@Test	
+	public void testGetTopicByIdReturnsTopic(){
+		 Function<String, Topic> getTopicById =  qf.getTopicById();
+		assertEquals(getTopicById.apply(testTopic.getId()), testTopic);	
+	}
+	@Test	
+	public void testUpdateTopic(){
+		 Topic newTestTopic1 = new Topic("test-topic", "test topic", "testUpdate", new ArrayList<>(Arrays.asList("test-question-1", "test-question-2", "test-question-3")));
+		 Function<Topic, Topic> updateTopic =  qf.updateTopic();
+		 updateTopic.apply(newTestTopic1);
+		 verify(tRepo, times(1)).save(newTestTopic1);
+		 
+	}
+	
+	@Test
+	public void testDeleteTopic(){
+		 Consumer<String> deleteTopic =  qf.deleteTopic();
+		 assertDoesNotThrow(() -> deleteTopic.accept(testTopic.getId()));
+		 verify(tRepo, times(1)).deleteById("test-topic");
+	}
+	
+	@Test
+	public void testGetQuestions(){
+		Function<String, List<Question>> getQuestions =  qf.getQuestions();
+		getQuestions.apply(testTopic.getId());
+		 verify(qRepo, times(1)).findAllById(questionList);
+	}
+	@Test
+	public void testGetQuestionsExceptionThrown(){
+		Function<String, List<Question>> getQuestions =  qf.getQuestions();
+		assertThrows(QuestionServiceException.class, () -> getQuestions.apply(""), QuestionServiceException.NOT_FOUND_MESSAGE);
+	}
+		
 }
