@@ -19,7 +19,7 @@ import com.microsoft.azure.functions.annotation.HttpTrigger;
  */
 public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 
-	@FunctionName("getTopic")
+	@FunctionName("getTopicsByTitle")
 	public Topic executeGet(@HttpTrigger(name = "request", methods = {
 			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics") HttpRequestMessage<Optional<Topic>> request,
 			ExecutionContext context) {
@@ -57,7 +57,7 @@ public class TopicHandler extends AzureSpringBootRequestHandler<Topic, Topic> {
 		return handleRequest(request.getBody().get(), context);
 	}
 
-	@FunctionName("deleteTopic")
+	@FunctionName("deleteTopicById")
 	public Topic executeDelete(@HttpTrigger(name = "request", methods = {
 			HttpMethod.DELETE }, authLevel = AuthorizationLevel.ANONYMOUS, route = "topics/{topicId}") HttpRequestMessage<Optional<Topic>> request,
 			ExecutionContext context, @BindingName("topicId") String topicId) {
