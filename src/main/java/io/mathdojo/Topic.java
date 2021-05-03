@@ -103,4 +103,9 @@ public class Topic {
 		return true;
 	}
 
+	public boolean isValid() {
+		// object validation rules to be decided
+		return true;
+	}
+
 }
