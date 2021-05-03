@@ -24,7 +24,7 @@ public class QuestionHandler extends AzureSpringBootRequestHandler<Question, Que
 
 	@FunctionName("getQuestionsByTitleAndDifficulty")
 	public Question executeGet(@HttpTrigger(name = "request", methods = {
-			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "question") HttpRequestMessage<Optional<Question>> request,
+			HttpMethod.GET }, authLevel = AuthorizationLevel.ANONYMOUS, route = "questions") HttpRequestMessage<Optional<Question>> request,
 			ExecutionContext context) {
 		context.getLogger().info("Retrieving question");
 
