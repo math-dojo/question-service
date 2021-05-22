@@ -14,13 +14,15 @@ import com.microsoft.azure.functions.annotation.BindingName;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
+import io.mathdojo.useraccountservice.security.HTTPRequestSignatureVerificationEnabledHandler;
+
 /**
  * 
  * This class handles http requests specific to questions
  *
  */
 
-public class QuestionHandler extends AzureSpringBootRequestHandler<Question, Question> {
+public class QuestionOutputHandler extends HTTPRequestSignatureVerificationEnabledHandler<Question, Question> {
 
 	@FunctionName("getQuestionsByTitleAndDifficulty")
 	public Question executeGet(@HttpTrigger(name = "request", methods = {
